@@ -19,6 +19,9 @@ class ChessBoard:
         self.pieces = {} # For GA purpose
         pass
 
+    def __str__(self):
+        return '\n'.join([''.join(['.' if piece is None else str(piece) for piece in row]) for row in self.board])
+
     def initialize_board(self):
 
         # Set all row col to None

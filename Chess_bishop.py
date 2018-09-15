@@ -8,6 +8,9 @@ class ChessBishop(ChessPiece):
         self.type = "Bishop"
         self.color = color
 
+    def __str__(self):
+        return 'B' if self.color == 'w' else 'b'
+
     def get_attack_pattern(self):
 
         pass

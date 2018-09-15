@@ -8,6 +8,9 @@ class ChessRook(ChessPiece):
         self.type = "Rook"
         self.color = color
 
+    def __str__(self):
+        return 'R' if self.color == 'w' else 'r'
+
     def get_attack_pattern(self):
 
         pass

@@ -8,6 +8,9 @@ class ChessKnight(ChessPiece):
         self.type = "Knight"
         self.color = color
 
+    def __str__(self):
+        return 'K' if self.color == 'w' else 'k'
+
     def get_attack_pattern(self):
 
         pass

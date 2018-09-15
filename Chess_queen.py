@@ -8,6 +8,9 @@ class ChessQueen(ChessPiece):
         self.type = "Queen"
         self.color = color
 
+    def __str__(self):
+        return 'Q' if self.color == 'w' else 'q'
+
     def get_attack_pattern(self):
 
         current_row, current_col = self.position
