@@ -20,12 +20,16 @@ class ChessBoard:
         pass
 
     def initialize_board(self):
+
+        # Set all row col to None
         pass
 
     def add_piece_to_board(self, chess_piece):
+
+        # Set board[row][col] to the chess piece
         pass
     
-    
+    def get_tile_status(self, position):
 
-    def get_tile_status(self, positiion):
+        # Return board[row][col]
         pass
