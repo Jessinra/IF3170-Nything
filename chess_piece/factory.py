@@ -9,9 +9,7 @@ class ChessPieceFactory:
     def process_creation_order(chess_piece_order):
         created_chess_pieces = {}
         for order in chess_piece_order:
-            piece_color = order[0]
-            piece_type = order[1]
-            number_of_pieces = order[2]
+            piece_color, piece_type, number_of_pieces = order
 
             if piece_color not in created_chess_pieces:
                 created_chess_pieces[piece_color] = {}

@@ -11,5 +11,5 @@ class SolverModelFactory:
         elif algorithm_type == "simulated_annealing":
             return SimulatedAnnealing(*args, **kwargs)
 
-        elif algorithm_type == "hill_claimbing":
+        elif algorithm_type == "hill_climbing":
             return SimulatedAnnealing(proba=0, *args, **kwargs)

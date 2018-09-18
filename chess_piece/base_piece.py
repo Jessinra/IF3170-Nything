@@ -1,4 +1,15 @@
 class ChessPiece:
+    default_attack_pattern = {
+        "N": [],
+        "E": [],
+        "S": [],
+        "W": [],
+        "NE": [],
+        "NW": [],
+        "SW": [],
+        "SE": []
+    }
+
     def __init__(self, color):
         self.position = (None, None)    # For GA purpose
         self.color = color

@@ -10,4 +10,17 @@ class ChessRook(ChessPiece):
         return 'R' if self.color == 'w' else 'r'
 
     def get_attack_pattern(self):
-        pass
+        current_row, current_col = self.position
+        attack_pattern = self.default_attack_pattern
+
+        for i in range(current_row):
+            attack_pattern['N'].append((current_row - i, current_col))
+
+        for i in range(current_col, ChessBoard.max_col):
+            attack_pattern['E'].append((current_row, current_col + i))
+
+        for i in range(current_row, ChessBoard.max_row):
+            attack_pattern['S'].append((current_row + i, current_col))
+
+        for i in range(current_col):
+            attack_pattern['E'].append((current_row, current_col - i))

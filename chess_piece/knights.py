@@ -10,5 +10,7 @@ class ChessKnight(ChessPiece):
         return 'K' if self.color == 'w' else 'k'
 
     def get_attack_pattern(self):
+        current_row, current_col = self.position
+        attack_pattern = self.default_attack_pattern
 
-        pass
+        return attack_pattern

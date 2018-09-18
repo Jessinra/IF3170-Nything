@@ -12,20 +12,35 @@ class ChessQueen(ChessPiece):
 
     def get_attack_pattern(self):
         current_row, current_col = self.position
-        attack_pattern = {}
+        attack_pattern = self.default_attack_pattern
         
-        # N dirrection
-        attack_pattern['N'] = []
-        for i in range(current_row, ChessBoard.max_row):
-            attack_pattern['N'].append((current_row + i, current_col))
+        for i in range(current_row):
+            attack_pattern['N'].append((current_row - i, current_col))
 
-        # E dirrection
-        attack_pattern['E'] = []
         for i in range(current_col, ChessBoard.max_col):
             attack_pattern['E'].append((current_row, current_col + i))
 
-        attack_pattern['NE'] = []
-        pass # ... dst
+        for i in range(current_row, ChessBoard.max_row):
+            attack_pattern['S'].append((current_row + i, current_col))
+
+        for i in range(current_col):
+            attack_pattern['E'].append((current_row, current_col - i))
+
+        shortest = min(current_col, current_row)
+        for i in range(shortest):
+            attack_pattern['NE'].append((current_row - i, current_col - i))
+
+        shortest = min(ChessBoard.max_col - current_col, current_row)
+        for i in range(shortest):
+            attack_pattern['NW'].append((current_row - i, current_col + i))
+
+        shortest = min(current_col, ChessBoard.max_col - current_row)
+        for i in range(shortest):
+            attack_pattern['SW'].append((current_row + i, current_col - i))
+
+        shortest = min(ChessBoard.max_col - current_col, ChessBoard.max_col - current_row)
+        for i in range(shortest):
+            attack_pattern['SE'].append((current_row + i, current_col + i))
 
         return attack_pattern
 

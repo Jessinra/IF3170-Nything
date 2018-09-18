@@ -6,30 +6,12 @@ class ChessPlayer:
         self.chess_board = ChessBoard()
         self.solver = solver
 
-    def move_chess_piece(self, chess_piece):
-        # get random point 
-        # check if point available
-        # if yes: move chess to that point
-        # else: random again
+    def move_chess_piece(self, chess_piece, position):
+        from_position = chess_piece.position
+        chess_piece.move(position)
+        self.chess_board.update_chess_piece(chess_piece, from_position)
 
-        pass
-
-    def count_available_attack_target(self, chess_piece):
-        attack_pattern = chess_piece.get_attack_pattern()
-        score = 0
-
-        for direction in attack_pattern:
-
-            tiles_to_check = attack_pattern[direction]
-            for tile in tiles_to_check:
-
-                if self.chess_board.get_tile_status(tile) is not None:
-                    # score + 1 or something
-                    break
-
-        return score
-
-    def solve(self):
-        # apply algorithm to decide movement
-        
-        pass
+    def solve(self, iteration_count=0):
+        for _ in range(iteration_count):
+            chess_piece, position = self.solver.next_step()
+            self.move_chess_piece(chess_piece, position)
