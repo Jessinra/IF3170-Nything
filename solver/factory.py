@@ -1,12 +1,10 @@
-from Genetic_algorithm import GeneticAlgorithm
-from Simulated_annealing import SimulatedAnnealing
-from Hill_claimbing import HillClaimbing
+from solver.genetic_algorithm import GeneticAlgorithm
+from solver.simulated_annealing import SimulatedAnnealing
+
 
 class SolverModelFactory:
-
     @staticmethod
-    def create_model(algorithm_type, *args, **kwargs):
-
+    def create_model(cls, algorithm_type, *args, **kwargs):
         if algorithm_type == "genetic_algorithm":
             return GeneticAlgorithm(*args, **kwargs)
 

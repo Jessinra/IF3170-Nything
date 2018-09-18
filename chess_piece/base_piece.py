@@ -1,8 +1,5 @@
-
 class ChessPiece:
-
     def __init__(self, color):
-
         self.position = (None, None)    # For GA purpose
         self.color = color
 

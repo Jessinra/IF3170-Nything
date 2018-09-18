@@ -1,14 +1,12 @@
-from Chess_board import ChessBoard
+from chess_board import ChessBoard
+
 
 class ChessPlayer:
-
     def __init__(self, solver):
-
         self.chess_board = ChessBoard()
         self.solver = solver
 
     def move_chess_piece(self, chess_piece):
-
         # get random point 
         # check if point available
         # if yes: move chess to that point
@@ -17,7 +15,6 @@ class ChessPlayer:
         pass
 
     def count_available_attack_target(self, chess_piece):
-
         attack_pattern = chess_piece.get_attack_pattern()
         score = 0
 
@@ -33,8 +30,6 @@ class ChessPlayer:
         return score
 
     def solve(self):
-
         # apply algorithm to decide movement
         
         pass
-        

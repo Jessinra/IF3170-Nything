@@ -1,12 +1,10 @@
-from Chess_piece import ChessPiece
-from Chess_board import ChessBoard
+from chess_piece.base_piece import ChessPiece
+
 
 class ChessKnight(ChessPiece):
-
     def __init__(self, color):
-        
+        super().__init__(color)
         self.type = "Knight"
-        self.color = color
 
     def __str__(self):
         return 'K' if self.color == 'w' else 'k'
