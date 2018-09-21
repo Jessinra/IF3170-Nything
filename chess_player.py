@@ -6,8 +6,6 @@ class ChessPlayer:
         self.chess_board = ChessBoard()
         self.solver = solver
 
-    
-
     def solve(self, iteration_count=0):
         for _ in range(iteration_count):
             

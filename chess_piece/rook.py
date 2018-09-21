@@ -1,4 +1,5 @@
 from chess_piece.base_piece import ChessPiece
+from chess_board import ChessBoard
 
 
 class ChessRook(ChessPiece):

@@ -1,11 +1,8 @@
-
 class StateEvaluator:
-
     def __init__(self):
         pass
 
     def evaluate(self, chess_board):
-
         score = 0
         for piece in chess_board.pieces:
             score -= self.evaluate_piece_attack_target(chess_board, piece)
@@ -13,7 +10,6 @@ class StateEvaluator:
         return score
 
     def evaluate_piece_attack_target(self, chess_board, chess_piece):
-        
         attack_pattern = chess_piece.get_attack_pattern()
 
         score = 0
@@ -26,9 +22,7 @@ class StateEvaluator:
                     break
 
     def get_score(self, targeted_piece, chess_piece):
-
         if targeted_piece.color == chess_piece.color:
             return 1
         else:
             return -1
-                    

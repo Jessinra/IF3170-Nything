@@ -1,9 +1,8 @@
-from base_solver import BaseSolver
+from solver.base_solver import BaseSolver
+
 
 class IncrementalSolver(BaseSolver):
-
     def __init__(self, chess_board):
-
         super().__init__()
         self.chess_board = chess_board
 

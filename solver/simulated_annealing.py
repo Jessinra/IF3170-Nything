@@ -1,8 +1,8 @@
 from solver.incremental_solver import IncrementalSolver
 import random
 
-class SimulatedAnnealing(IncrementalSolver):
 
+class SimulatedAnnealing(IncrementalSolver):
     def __init__(self, chess_board, threshold_generator):
         super().__init__(chess_board)
         self.threshold_generator = threshold_generator
