@@ -5,6 +5,7 @@ import random
 class SimulatedAnnealing(IncrementalSolver):
     def __init__(self, chess_board, threshold_generator):
         super().__init__(chess_board)
+        self.step = 0
         self.threshold_generator = threshold_generator
 
     def next_step(self):
@@ -17,8 +18,10 @@ class SimulatedAnnealing(IncrementalSolver):
         if self.is_good_move(current_score, move_score):
             self.move_chess_piece(moved_piece, new_position)
 
-        elif self.is_move_accepted_by_chances():
+        elif self.is_move_accepted_by_chances(current_score - move_score):
             self.move_chess_piece(moved_piece, new_position)
+
+        self.step += 1
 
     def get_empty_tiles(self):
         empty_tiles = []
@@ -34,10 +37,10 @@ class SimulatedAnnealing(IncrementalSolver):
     def is_good_move(self, current_score, move_score):
         return move_score > current_score
 
-    def is_move_accepted_by_chances(self):
-        return random.uniform(0, 1) <= self.get_threshold()
-
-    def get_threshold(self):
-        return self.threshold_generator.calculate_threshold(5)
+    def is_move_accepted_by_chances(self, score_difference):
+        return random.uniform(0, 1) <= self.get_threshold(score_difference, self.step)
+        
+    def get_threshold(self, score_difference, step):
+        return self.threshold_generator.calculate_threshold(score_difference, step)
 
 

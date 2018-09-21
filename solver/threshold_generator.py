@@ -21,13 +21,13 @@ class ConstantGenerator(ThresholdGenerator):
 class BoltzmannGenerator(ThresholdGenerator):
     def __init__(self, initial_temperature, ratio):
         super().__init__()
-        self.temperature = initial_temperature
+        self.initial_temperature = initial_temperature
         self.ratio = ratio
 
-    def calculate_threshold(self, value_differences):
-        if self.temperature <= 0:
-            return 0
-        threshold = exp(-value_differences / self.temperature)
-        self.temperature /= self.ratio
+    def calculate_threshold(self, value_difference, step):
+        current_temperature = self.initial_temperature / self.ratio**step
 
-        return threshold 
+        if current_temperature <= 0:
+            return 0
+
+        return exp(-value_difference / current_temperature)
