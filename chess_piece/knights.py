@@ -1,4 +1,5 @@
 from chess_piece.base_piece import ChessPiece
+from chess_board import ChessBoard
 
 
 class ChessKnight(ChessPiece):
@@ -11,6 +12,31 @@ class ChessKnight(ChessPiece):
 
     def get_attack_pattern(self):
         current_row, current_col = self.position
-        attack_pattern = self.default_attack_pattern
+        attack_pattern = self.get_default_attack_pattern()
+        attack_pattern['N'] = [
+            (current_row - 2, current_col + 1),
+            (current_row - 2, current_col - 1),
+            (current_row - 1, current_col + 2),
+            (current_row + 1, current_col + 2),
+            (current_row + 2, current_col + 1),
+            (current_row + 2, current_col - 1),
+            (current_row - 1, current_col - 2),
+            (current_row + 1, current_col - 2),
+        ]
 
-        return attack_pattern
+        filtered_pattern = {'N': []}
+
+        for (row, col) in attack_pattern['N']:
+            if row >= ChessBoard.max_row-1:
+                continue
+            elif col >= ChessBoard.max_col-1:
+                continue
+            elif col < 0:
+                continue
+            elif row < 0:
+                continue
+
+            filtered_pattern['N'].append((row, col))
+
+
+        return filtered_pattern

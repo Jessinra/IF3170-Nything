@@ -1,3 +1,5 @@
+from random import randint
+
 
 class ChessBoard:
     initialized = False
@@ -13,10 +15,20 @@ class ChessBoard:
 
         # Implement this
         self.board = {}
-        self.pieces = {} # For GA purpose
+        self.pieces = [] # For GA purpose
 
     def __str__(self):
-        return '\n'.join([''.join(['.' if piece is None else str(piece) for piece in row]) for row in self.board])
+        result = ""
+        for row in range(self.max_row):
+            for col in range(self.max_col):
+                piece = self.board[row][col]
+                if piece is None:
+                    result += "."
+                else:
+                    result += str(piece)
+            result += "\n"
+
+        return result
 
     def initialize_board(self):
         # Set all row col to None
@@ -26,15 +38,31 @@ class ChessBoard:
             for col in range(self.max_col):
                 self.board[row][col] = None
 
+    def add_piece_randomly(self, chess_piece):
+        placed = False
+        while not placed:
+            row = randint(self.min_row, self.max_row-1)
+            col = randint(self.min_col, self.max_col-1)
+            position = (row, col)
+            placed = not self.get_tile_status(position)
+            chess_piece.position = position
+            self.add_piece_to_board(chess_piece)
+
     def add_piece_to_board(self, chess_piece):
         # Set board[row][col] to the chess piece
         row, col = chess_piece.position
         self.board[row][col] = chess_piece
-    
+        if chess_piece not in self.pieces:
+            self.pieces.append(chess_piece)
+
+    def get_piece_on_tile(self, position):
+        row, col = position
+        return self.board[row][col]
+
     def get_tile_status(self, position):
         # Return board[row][col] (chesspiece)
         row, col = position
-        return self.board[row][col]
+        return self.board[row][col] is not None
 
     def get_tile_color(self, position):
         """ Used by evaluator for scoring purposes """
@@ -47,6 +75,3 @@ class ChessBoard:
         self.board[row][col] = None
         row, col = chess_piece.position
         self.board[row][col] = chess_piece
-
-    
-        

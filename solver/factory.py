@@ -1,9 +1,10 @@
 from solver.genetic_algorithm import GeneticAlgorithm
 from solver.simulated_annealing import SimulatedAnnealing
+from solver.hill_climbing import HillClimbing
 
 
 class SolverModelFactory:
-    @staticmethod
+    @classmethod
     def create_model(cls, algorithm_type, *args, **kwargs):
         if algorithm_type == "genetic_algorithm":
             return GeneticAlgorithm(*args, **kwargs)
@@ -12,4 +13,4 @@ class SolverModelFactory:
             return SimulatedAnnealing(*args, **kwargs)
 
         elif algorithm_type == "hill_climbing":
-            return SimulatedAnnealing(proba=0, *args, **kwargs)
+            return HillClimbing(*args, **kwargs)

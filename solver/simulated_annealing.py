@@ -21,13 +21,12 @@ class SimulatedAnnealing(IncrementalSolver):
             self.move_chess_piece(moved_piece, new_position)
 
     def get_empty_tiles(self):
-
         empty_tiles = []
         for i in range(self.chess_board.min_row, self.chess_board.max_row):
             for j in range(self.chess_board.min_col, self.chess_board.max_col):
                 tiles = self.chess_board.get_tile_status((i, j))
                 
-                if tiles is None: 
+                if not tiles:
                     empty_tiles.append((i, j))
 
         return empty_tiles
@@ -39,6 +38,6 @@ class SimulatedAnnealing(IncrementalSolver):
         return random.uniform(0, 1) <= self.get_threshold()
 
     def get_threshold(self):
-        return self.threshold_generator.calculate_threshold()
+        return self.threshold_generator.calculate_threshold(5)
 
 
