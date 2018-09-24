@@ -5,15 +5,13 @@ from file_parser import FileParser
 from solver.threshold_generator import ConstantGenerator
 from copy import deepcopy
 
-for i in range(100):
-    board = ChessBoard()
-    board = FileParser.load(board, "something.txt")
-    threshold = ConstantGenerator(0.1)
-    solver = SolverModelFactory.create_model("simulated_annealing", board, threshold)
-    player = ChessPlayer(board, solver)
-    before_board = deepcopy(board)
-    before_score = player.solver.evaluator.evaluate(board)
-    player.solve(200)
-    score = player.solver.evaluator.evaluate(board)
-    print(score)
-    print(board)
+parent = 4
+mutation_prob = 0.25
+fraction = 0.75
+solver = SolverModelFactory.create_model("genetic_algorithm", parent, mutation_prob, fraction)
+solver.generate()
+solver.find_position()
+solver.find_score()
+solver.fitness()
+solver.weighted_random()
+solver.selection()
