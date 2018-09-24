@@ -112,7 +112,7 @@ class GeneticAlgorithm(BaseSolver):
             print('Iterasi ke' + str(i))
             print('\n')
 
-    def parent_list_chess_piece_position_generator(self):
+    def parent_list_of_chess_piece_position_generator(self):
         for parent in self.population:
             for chess_piece in parent.chess_board.pieces:
                 parent.position.append(chess_piece.position)
