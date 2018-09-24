@@ -10,8 +10,8 @@ mutation_prob = 0.25
 fraction = 0.75
 solver = SolverModelFactory.create_model("genetic_algorithm", parent, mutation_prob, fraction)
 solver.generate()
-solver.find_position()
 solver.find_score()
 solver.fitness()
 solver.weighted_random()
-solver.selection()
+solver.parent_list_chess_piece_position_generator()
+solver.selection_and_crossover()
