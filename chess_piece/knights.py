@@ -14,22 +14,24 @@ class ChessKnight(ChessPiece):
         current_row, current_col = self.position
         attack_pattern = self.get_default_attack_pattern()
         attack_pattern['N'] = [
-            (current_row - 2, current_col + 1),
-            (current_row - 2, current_col - 1),
-            (current_row - 1, current_col + 2),
-            (current_row + 1, current_col + 2),
-            (current_row + 2, current_col + 1),
-            (current_row + 2, current_col - 1),
-            (current_row - 1, current_col - 2),
-            (current_row + 1, current_col - 2),
+
+            (current_row - 2, current_col + 1),  # 1 o'clock direction
+            (current_row - 1, current_col + 2),  # 2 o'clock direction
+            (current_row + 1, current_col + 2),  # 4 o'clock direction
+            (current_row + 2, current_col + 1),  # 5 o'clock direction
+            (current_row + 2, current_col - 1),  # 7 o'clock direction
+            (current_row + 1, current_col - 2),  # 8 o'clock direction
+            (current_row - 1, current_col - 2),  # 10 o'clock direction
+            (current_row - 2, current_col - 1),  # 11 o'clock direction
         ]
 
         filtered_pattern = {'N': []}
 
         for (row, col) in attack_pattern['N']:
-            if row >= ChessConstants.max_row-1:
+
+            if row >= ChessConstants.max_row:
                 continue
-            elif col >= ChessConstants.max_col-1:
+            elif col >= ChessConstants.max_col:
                 continue
             elif col < 0:
                 continue
@@ -37,6 +39,5 @@ class ChessKnight(ChessPiece):
                 continue
 
             filtered_pattern['N'].append((row, col))
-
 
         return filtered_pattern

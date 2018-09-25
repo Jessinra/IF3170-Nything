@@ -17,13 +17,13 @@ class ChessRook(ChessPiece):
         for i in range(current_row):
             attack_pattern['N'].append((current_row - i - 1, current_col))
 
-        for i in range(ChessConstants.max_col-current_col-1):
+        for i in range(ChessConstants.max_col - current_col - 1):
             attack_pattern['E'].append((current_row, current_col + i + 1))
 
-        for i in range(ChessConstants.max_row-current_row-1):
+        for i in range(ChessConstants.max_row - current_row - 1):
             attack_pattern['S'].append((current_row + i + 1, current_col))
 
         for i in range(current_col):
-            attack_pattern['W'].append((current_row, current_col - i -1))
+            attack_pattern['W'].append((current_row, current_col - i - 1))
 
         return attack_pattern

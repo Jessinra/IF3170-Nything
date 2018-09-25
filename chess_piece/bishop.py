@@ -16,11 +16,11 @@ class ChessBishop(ChessPiece):
 
         shortest = min(current_col, current_row)
         for i in range(shortest):
-            attack_pattern['NE'].append((current_row - i - 1, current_col - i - 1))
+            attack_pattern['NW'].append((current_row - i - 1, current_col - i - 1))
 
-        shortest = min(ChessConstants.max_col - current_col -1, current_row)
+        shortest = min(ChessConstants.max_col - current_col - 1, current_row)
         for i in range(shortest):
-            attack_pattern['NW'].append((current_row - i - 1, current_col + i + 1))
+            attack_pattern['NE'].append((current_row - i - 1, current_col + i + 1))
 
         shortest = min(current_col, ChessConstants.max_col - current_row - 1)
         for i in range(shortest):
