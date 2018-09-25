@@ -1,5 +1,5 @@
 from chess_piece.base_piece import ChessPiece
-from chess_board import ChessBoard
+from chess_constant import ChessConstants
 
 
 class ChessKnight(ChessPiece):
@@ -27,9 +27,9 @@ class ChessKnight(ChessPiece):
         filtered_pattern = {'N': []}
 
         for (row, col) in attack_pattern['N']:
-            if row >= ChessBoard.max_row-1:
+            if row >= ChessConstants.max_row-1:
                 continue
-            elif col >= ChessBoard.max_col-1:
+            elif col >= ChessConstants.max_col-1:
                 continue
             elif col < 0:
                 continue

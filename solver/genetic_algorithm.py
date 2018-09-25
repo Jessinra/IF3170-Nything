@@ -72,7 +72,7 @@ class GeneticAlgorithm(BaseSolver):
 
         weighted_value = list(itertools.chain(*weighted_value))
 
-        for i in range(self.population_count):
+        for _ in range(self.population_count):
             choice = random.choice(weighted_value)
             self.select_parent.append(choice)
 
