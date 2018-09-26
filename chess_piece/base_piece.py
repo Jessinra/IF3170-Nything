@@ -3,7 +3,8 @@ class ChessPiece:
         self.position = (None, None)  # For GA purpose
         self.color = color
 
-    def get_default_attack_pattern(self):
+    @staticmethod
+    def get_default_attack_pattern():
         return {
             "N": [],
             "E": [],
@@ -14,6 +15,12 @@ class ChessPiece:
             "SW": [],
             "SE": []
         }
+
+    def __str__(self):
+        char = self.__class__.__name__[0]
+        if self.color == 'w':
+            char = char.upper()
+        return char
 
     def move(self, position):
         self.position = position

@@ -22,6 +22,3 @@ class FullScanHillClimbing(IncrementalSolver):
 
         if self.is_good_move(maximum_score):
             self.move_chess_piece(moved_piece, maximum_position)
-
-
-

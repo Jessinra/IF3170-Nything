@@ -5,10 +5,9 @@ from solver.stochastic_hill_climbing import StochasticHillClimbing
 
 
 class SolverModelFactory:
-
     @staticmethod
     def create_model(algorithm_type, *args, **kwargs):
-        
+
         if algorithm_type == "genetic_algorithm":
             return GeneticAlgorithm(*args, **kwargs)
 

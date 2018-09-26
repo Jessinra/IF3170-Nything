@@ -2,13 +2,10 @@ from chess_piece.base_piece import ChessPiece
 import chess_constant
 
 
-class ChessKnight(ChessPiece):
+class Knight(ChessPiece):
     def __init__(self, color):
         super().__init__(color)
         self.type = "Knight"
-
-    def __str__(self):
-        return 'K' if self.color == 'w' else 'k'
 
     def get_attack_pattern(self):
         current_row, current_col = self.position

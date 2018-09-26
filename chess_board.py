@@ -1,4 +1,4 @@
-from random import randint, choice
+from random import choice
 from chess_piece.factory import ChessPieceFactory
 import chess_constant
 
@@ -38,7 +38,7 @@ class ChessBoard:
         self.board[row][col] = value
 
     def add_piece_randomly(self, chess_piece):
-        if (len(self.pieces) == self.max_col * self.max_row):
+        if len(self.pieces) == self.max_col * self.max_row:
             return
 
         empty_tiles = self.get_empty_tiles()
@@ -51,7 +51,7 @@ class ChessBoard:
             for j in range(self.max_col):
                 if not self.is_tile_empty((i, j)):
                     continue
-                empty_tiles.append((i,j))
+                empty_tiles.append((i, j))
         return empty_tiles
 
     def add_piece_to_board(self, chess_piece):

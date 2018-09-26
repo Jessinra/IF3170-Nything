@@ -2,13 +2,10 @@ from chess_piece.base_piece import ChessPiece
 import chess_constant
 
 
-class ChessBishop(ChessPiece):
+class Bishop(ChessPiece):
     def __init__(self, color):
         super().__init__(color)
         self.type = "Bishop"
-
-    def __str__(self):
-        return 'B' if self.color == 'w' else 'b'
 
     def get_attack_pattern(self):
         current_row, current_col = self.position

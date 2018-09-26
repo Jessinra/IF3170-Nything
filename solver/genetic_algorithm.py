@@ -6,6 +6,7 @@ import random
 import itertools
 import copy
 
+
 class GeneticAlgorithm(BaseSolver):
     def __init__(self, population_count, mutation_prob, fraction):
         super().__init__()
@@ -21,7 +22,7 @@ class GeneticAlgorithm(BaseSolver):
             board = FileParser.load(board, "something.txt")
             parent = Parent(board)
             self.population.append(parent)
-            if i == self.population_count-1:
+            if i == self.population_count - 1:
                 parent.reset_id()
 
     @staticmethod
@@ -46,7 +47,7 @@ class GeneticAlgorithm(BaseSolver):
             sum_of_score += parent.score
 
         for parent in self.population:
-            parent.fitness_score = parent.score/sum_of_score
+            parent.fitness_score = parent.score / sum_of_score
 
         self.fitness_percetager()
 
@@ -84,7 +85,7 @@ class GeneticAlgorithm(BaseSolver):
     def selection_and_crossover(self):
         for i in range(0, self.population_count, 2):
             len_position = len(self.population[0].position)
-            split_point = random.randint(1, len_position-1)
+            split_point = random.randint(1, len_position - 1)
 
             list_position_1 = copy.deepcopy((self.find_parent(self.select_parent[i])).position)
             list_position_2 = list_position_1[:split_point]
@@ -94,7 +95,7 @@ class GeneticAlgorithm(BaseSolver):
             print(list_position_1)
             print(list_position_2)
 
-            list_position_3 = copy.deepcopy((self.find_parent(self.select_parent[i+1])).position)
+            list_position_3 = copy.deepcopy((self.find_parent(self.select_parent[i + 1])).position)
             list_position_4 = list_position_3[:split_point]
             print(split_point)
             print(list_position_3)
@@ -116,7 +117,7 @@ class GeneticAlgorithm(BaseSolver):
         for parent in self.population:
             for chess_piece in parent.chess_board.pieces:
                 parent.position.append(chess_piece.position)
-            #print(parent.position)
+                # print(parent.position)
 
     def find_parent(self, id):
         for parent in self.population:

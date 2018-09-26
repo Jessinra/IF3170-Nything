@@ -17,7 +17,3 @@ class StochasticHillClimbing(IncrementalSolver):
 
         if self.is_good_move(move_score):
             self.move_chess_piece(moved_piece, position)
-
-
-
-

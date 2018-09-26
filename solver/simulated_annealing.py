@@ -23,8 +23,6 @@ class SimulatedAnnealing(IncrementalSolver):
 
     def should_bad_move_be_accepted(self, bad_move_score):
         return random.random() < self.get_threshold(self.current_score - bad_move_score, self.step)
-        
+
     def get_threshold(self, score_difference, step):
         return self.threshold_generator.calculate_threshold(score_difference, step)
-
-

@@ -1,10 +1,15 @@
-from chess_piece.queen import ChessQueen
-from chess_piece.rook import ChessRook
-from chess_piece.bishop import ChessBishop
-from chess_piece.knights import ChessKnight
+from chess_piece.queen import Queen
+from chess_piece.rook import Rook
+from chess_piece.bishop import Bishop
+from chess_piece.knights import Knight
 
 
 class ChessPieceFactory:
+    pieces = [Bishop, Queen, Rook, Knight]
+    piece_class_dict = {}
+    for piece in pieces:
+        piece_class_dict[piece.__name__.lower()] = piece
+
     @staticmethod
     def execute_creation_order(chess_piece_order):
         created_chess_pieces = {}
@@ -25,14 +30,4 @@ class ChessPieceFactory:
 
     @staticmethod
     def create_chess_piece(piece_type, piece_color):
-        if piece_type.lower() == "queen":
-            return ChessQueen(piece_color)
-
-        elif piece_type.lower() == "rook":
-            return ChessRook(piece_color)
-
-        elif piece_type.lower() == "bishop":
-            return ChessBishop(piece_color)
-
-        elif piece_type.lower() == "knight":
-            return ChessKnight(piece_color)
+        return ChessPieceFactory.piece_class_dict[piece_type](piece_color)
