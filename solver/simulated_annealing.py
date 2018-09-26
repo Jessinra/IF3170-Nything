@@ -31,7 +31,7 @@ class SimulatedAnnealing(IncrementalSolver):
         return empty_tiles
 
     def is_good_move(self, move_score):
-        return move_score > self.current_score
+        return self.current_score < move_score
 
     def is_bad_move_accepted(self, bad_move_score):
         return random.random() < self.get_threshold(self.current_score - bad_move_score, self.step)

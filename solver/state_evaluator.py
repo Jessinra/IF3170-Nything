@@ -5,7 +5,7 @@ class StateEvaluator:
     def evaluate(self, chess_board):
         score = 0
         for piece in chess_board.pieces:
-            score -= self.evaluate_piece_attack_target(chess_board, piece)
+            score += self.evaluate_piece_attack_target(chess_board, piece)
 
         return score
 
@@ -25,6 +25,6 @@ class StateEvaluator:
 
     def get_score(self, targeted_piece, chess_piece):
         if targeted_piece.color == chess_piece.color:
-            return 1
+            return -1   # minimize same color
         else:
-            return -1
+            return 1    # maximize different color

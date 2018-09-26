@@ -4,8 +4,10 @@ from solver.hill_climbing import HillClimbing
 
 
 class SolverModelFactory:
-    @classmethod
-    def create_model(cls, algorithm_type, *args, **kwargs):
+
+    @staticmethod
+    def create_model(algorithm_type, *args, **kwargs):
+        
         if algorithm_type == "genetic_algorithm":
             return GeneticAlgorithm(*args, **kwargs)
 

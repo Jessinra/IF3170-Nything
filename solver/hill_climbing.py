@@ -11,17 +11,17 @@ class HillClimbing(IncrementalSolver):
         moved_piece = random.choice(self.chess_board.pieces)
 
         current_score = self.evaluator.evaluate(self.chess_board)
-        minimum_score = current_score
-        minimum_position = moved_piece.position
+        maximum_score = current_score
+        maximum_position = moved_piece.position
 
         for position in empty_tiles:
             move_score = self.evaluate_move(moved_piece, position)
-            if move_score <= minimum_score:    # CHECK SCORING SYSTEM CONVENTION
-                minimum_score = move_score
-                minimum_position = position
+            if move_score >= maximum_score:    # CHECK SCORING SYSTEM CONVENTION
+                maximum_score = move_score
+                maximum_position = position
 
-        if self.is_good_move(current_score, minimum_score):
-            self.move_chess_piece(moved_piece, minimum_position)
+        if self.is_good_move(current_score, maximum_score):
+            self.move_chess_piece(moved_piece, maximum_position)
 
     def get_empty_tiles(self):
         empty_tiles = []
@@ -33,6 +33,6 @@ class HillClimbing(IncrementalSolver):
         return empty_tiles
 
     def is_good_move(self, current_score, move_score):
-        return current_score < move_score
+        return current_score <= move_score
 
 

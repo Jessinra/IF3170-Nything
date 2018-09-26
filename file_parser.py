@@ -16,8 +16,8 @@ class FileParser:
         return parsed_data
 
     @staticmethod
-    def construct_order_details(line):
-        color, chess_type, count = line.strip().lower().split()
+    def construct_order_details(text_line):
+        color, chess_type, count = text_line.strip().lower().split()
         order_detail = {
             'color': 'w' if color == 'white' else 'b',
             'type': chess_type,

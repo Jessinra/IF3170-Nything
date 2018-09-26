@@ -1,5 +1,5 @@
 from chess_piece.base_piece import ChessPiece
-from chess_constant import ChessConstants
+import chess_constant
 
 
 class ChessRook(ChessPiece):
@@ -17,10 +17,10 @@ class ChessRook(ChessPiece):
         for i in range(current_row):
             attack_pattern['N'].append((current_row - i - 1, current_col))
 
-        for i in range(ChessConstants.max_col - current_col - 1):
+        for i in range(chess_constant.MAX_COL - current_col - 1):
             attack_pattern['E'].append((current_row, current_col + i + 1))
 
-        for i in range(ChessConstants.max_row - current_row - 1):
+        for i in range(chess_constant.MAX_ROW - current_row - 1):
             attack_pattern['S'].append((current_row + i + 1, current_col))
 
         for i in range(current_col):
