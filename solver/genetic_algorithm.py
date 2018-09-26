@@ -7,11 +7,10 @@ import itertools
 import copy
 
 class GeneticAlgorithm(BaseSolver):
-    def __init__(self, population_count, mutation_prob, fraction):
+    def __init__(self, population_count, mutation_prob):
         super().__init__()
         self.population_count = population_count
         self.mutation_prob = mutation_prob
-        self.fraction = fraction
         self.population = []
         self.select_parent = []
 
@@ -102,12 +101,23 @@ class GeneticAlgorithm(BaseSolver):
             print(list_position_3)
             print(list_position_4)
 
-            list_position_2.append(list_position_3)
-            list_position_4.append(list_position_1)
+            list_position_2 += list_position_3
+            list_position_4 += list_position_1
 
             print('\n')
             print(list_position_2)
             print(list_position_4)
+            print('\n')
+
+            print('this is the old parent')
+            print(self.population[i].position)
+            print(self.population[i + 1].position)
+            # self.population[i].position = list_position_2
+            # self.population[i+1].position = list_position_4
+            # print('this is the new parent')
+            # print(self.population[i].position)
+            # print(self.population[i + 1].position)
+
             print('\n')
             print('Iterasi ke' + str(i))
             print('\n')
@@ -122,6 +132,13 @@ class GeneticAlgorithm(BaseSolver):
         for parent in self.population:
             if id == parent.id:
                 return parent
+
+    def mutation(self):
+        mutation_probability = [0] * 25 + [1] * 75
+        choice = random.choice(mutation_probability)
+
+        # if choice:
+        #     piece = random.randint(self.population[0].chessboard.)
 
     def next_step(self):
         pass

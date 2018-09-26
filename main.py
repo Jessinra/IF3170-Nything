@@ -7,8 +7,7 @@ from copy import deepcopy
 
 parent = 4
 mutation_prob = 0.25
-fraction = 0.75
-solver = SolverModelFactory.create_model("genetic_algorithm", parent, mutation_prob, fraction)
+solver = SolverModelFactory.create_model("genetic_algorithm", parent, mutation_prob)
 solver.generate()
 solver.find_score()
 solver.fitness()
