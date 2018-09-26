@@ -10,17 +10,17 @@ class FileParser:
 
         parsed_data = []
         for line in raw_creation_list:
-            order_detail = FileParser.construct_order_details(line)
-            parsed_data.append(order_detail)
+            parsed_line = FileParser.parse_line(line)
+            parsed_data.append(parsed_line)
 
         return parsed_data
 
     @staticmethod
-    def construct_order_details(line):
-        color, chess_type, count = line.strip().lower().split()
-        order_detail = {
+    def parse_line(text_line):
+        color, chess_type, count = text_line.strip().lower().split()
+        parsed_line = {
             'color': 'w' if color == 'white' else 'b',
             'type': chess_type,
             'count': int(count)
         }
-        return order_detail
+        return parsed_line

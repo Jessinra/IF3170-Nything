@@ -1,8 +1,4 @@
-
-
-class ChessConstants:
-
-    min_row = 0
-    max_row = 8 
-    min_col = 0
-    max_col = 8
+MIN_ROW = 0
+MAX_ROW = 8 
+MIN_COL = 0
+MAX_COL = 8

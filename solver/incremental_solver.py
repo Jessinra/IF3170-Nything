@@ -28,3 +28,9 @@ class IncrementalSolver(BaseSolver):
         self.move_chess_piece(moved_piece, old_position)
 
         return score
+
+    def get_empty_tiles(self):
+        return self.chess_board.get_empty_tiles()
+
+    def is_good_move(self, move_score):
+        return self.current_score <= move_score

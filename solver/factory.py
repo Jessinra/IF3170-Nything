@@ -1,16 +1,22 @@
 from solver.genetic_algorithm import GeneticAlgorithm
 from solver.simulated_annealing import SimulatedAnnealing
-from solver.hill_climbing import HillClimbing
+from solver.full_scan_hill_climbing import FullScanHillClimbing
+from solver.stochastic_hill_climbing import StochasticHillClimbing
 
 
 class SolverModelFactory:
-    @classmethod
-    def create_model(cls, algorithm_type, *args, **kwargs):
+
+    @staticmethod
+    def create_model(algorithm_type, *args, **kwargs):
+        
         if algorithm_type == "genetic_algorithm":
             return GeneticAlgorithm(*args, **kwargs)
 
         elif algorithm_type == "simulated_annealing":
             return SimulatedAnnealing(*args, **kwargs)
 
-        elif algorithm_type == "hill_climbing":
-            return HillClimbing(*args, **kwargs)
+        elif algorithm_type == "full_scan_hill_climbing":
+            return FullScanHillClimbing(*args, **kwargs)
+
+        elif algorithm_type == "stochastic_hill_climbing":
+            return StochasticHillClimbing(*args, **kwargs)
