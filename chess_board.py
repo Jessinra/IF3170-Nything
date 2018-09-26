@@ -41,16 +41,18 @@ class ChessBoard:
         if (len(self.pieces) == self.max_col * self.max_row):
             return
 
-        positions = []
+        empty_tiles = self.get_empty_tiles()
+        chess_piece.position = choice(empty_tiles)
+        self.add_piece_to_board(chess_piece)
+
+    def get_empty_tiles(self):
+        empty_tiles = []
         for i in range(self.max_row):
             for j in range(self.max_col):
                 if not self.is_tile_empty((i, j)):
                     continue
-                positions.append((i,j))
-
-        pos = choice(positions)
-        chess_piece.position = pos
-        self.add_piece_to_board(chess_piece)
+                empty_tiles.append((i,j))
+        return empty_tiles
 
     def add_piece_to_board(self, chess_piece):
         self.set_tiles_value(chess_piece.position, chess_piece)

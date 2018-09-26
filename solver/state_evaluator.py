@@ -1,6 +1,4 @@
 class StateEvaluator:
-    def __init__(self):
-        pass
 
     def evaluate(self, chess_board):
         score = 0

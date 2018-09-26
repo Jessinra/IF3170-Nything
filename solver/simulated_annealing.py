@@ -21,18 +21,6 @@ class SimulatedAnnealing(IncrementalSolver):
     def get_random_move(self):
         return random.choice(self.chess_board.pieces), random.choice(self.get_empty_tiles())
 
-    def get_empty_tiles(self):
-        empty_tiles = []
-        for i in range(self.chess_board.min_row, self.chess_board.max_row):
-            for j in range(self.chess_board.min_col, self.chess_board.max_col):
-                if self.chess_board.is_tile_empty((i, j)):
-                    empty_tiles.append((i, j))
-
-        return empty_tiles
-
-    def is_good_move(self, move_score):
-        return self.current_score <= move_score
-
     def should_bad_move_be_accepted(self, bad_move_score):
         return random.random() < self.get_threshold(self.current_score - bad_move_score, self.step)
         
