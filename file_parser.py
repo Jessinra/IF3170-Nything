@@ -1,5 +1,3 @@
-from chess_piece.factory import ChessPieceFactory
-
 class FileParser:
     @staticmethod
     def read_file(filename=None):
@@ -8,29 +6,21 @@ class FileParser:
 
     @staticmethod
     def parse_data(filename=None):
-        raw_data = FileParser.read_file(filename)
-        parsed_data = []
+        raw_creation_list = FileParser.read_file(filename)
 
-        for row in raw_data:
-            split_row = row.strip().lower().split()
-            color, chess_type, count = split_row
-            color = 'w' if color == 'white' else 'b'
-            count = int(count)
-            parsed_data.append({
-                'color': color,
-                'type': chess_type,
-                'count': count
-            })
+        parsed_data = []
+        for line in raw_creation_list:
+            order_detail = FileParser.construct_order_details(line)
+            parsed_data.append(order_detail)
 
         return parsed_data
 
-    @classmethod
-    def load(cls, board, filename):
-        board.initialize_board()
-        data = cls.parse_data(filename)
-        for d in data:
-            for _ in range(d['count']):
-                chess_piece = ChessPieceFactory.create_chess_piece(d['type'], d['color'])
-                board.add_piece_randomly(chess_piece)
-
-        return board
+    @staticmethod
+    def construct_order_details(line):
+        color, chess_type, count = line.strip().lower().split()
+        order_detail = {
+            'color': 'w' if color == 'white' else 'b',
+            'type': chess_type,
+            'count': int(count)
+        }
+        return order_detail
