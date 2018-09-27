@@ -9,7 +9,7 @@ class SimulatedAnnealing(IncrementalSolver):
         self.threshold_generator = threshold_generator
 
     def next_step(self):
-        moved_piece, new_position = self.get_random_move()
+        moved_piece, new_position = self.get_new_move()
         move_score = self.evaluate_move(moved_piece, new_position)
 
         if self.is_good_move(move_score) or self.should_bad_move_be_accepted(move_score):
@@ -18,7 +18,7 @@ class SimulatedAnnealing(IncrementalSolver):
 
         self.step += 1
 
-    def get_random_move(self):
+    def get_new_move(self):
         return random.choice(self.chess_board.pieces), random.choice(self.get_empty_tiles())
 
     def should_bad_move_be_accepted(self, bad_move_score):

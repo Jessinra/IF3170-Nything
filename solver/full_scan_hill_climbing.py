@@ -1,24 +1,21 @@
-from solver.incremental_solver import IncrementalSolver
+from solver.hill_climbing import HillClimbing
 import random
 
 
-class FullScanHillClimbing(IncrementalSolver):
+class FullScanHillClimbing(HillClimbing):
     def __init__(self, chess_board):
         super().__init__(chess_board)
-
-    def next_step(self):
-        empty_tiles = self.get_empty_tiles()
+    
+    def get_new_move(self):
         moved_piece = random.choice(self.chess_board.pieces)
 
-        self.current_score = self.evaluator.evaluate(self.chess_board)
-        maximum_score = self.current_score
-        maximum_position = moved_piece.position
+        optimal_score = self.current_score
+        optimal_position = moved_piece.position
 
-        for position in empty_tiles:
-            move_score = self.evaluate_move(moved_piece, position)
-            if move_score >= maximum_score:
-                maximum_score = move_score
-                maximum_position = position
+        for empty_tile in self.get_empty_tiles():
+            move_score = self.evaluate_move(moved_piece, empty_tile)
+            if move_score >= optimal_score:
+                optimal_score = move_score
+                optimal_position = empty_tile
 
-        if self.is_good_move(maximum_score):
-            self.move_chess_piece(moved_piece, maximum_position)
+        return moved_piece, optimal_position

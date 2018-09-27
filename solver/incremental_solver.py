@@ -1,4 +1,5 @@
 from solver.base_solver import BaseSolver
+from abc import abstractmethod
 
 
 class IncrementalSolver(BaseSolver):
@@ -6,6 +7,10 @@ class IncrementalSolver(BaseSolver):
         super().__init__()
         self.chess_board = chess_board
         self.current_score = self.evaluator.evaluate(self.chess_board)
+
+    @abstractmethod
+    def get_new_move(self):
+        pass
 
     def move_chess_piece(self, chess_piece, position):
         from_position = chess_piece.position
