@@ -19,8 +19,9 @@ class ChessPiece:
     def __str__(self):
         char = self.__class__.__name__[0]
         if self.color == 'w':
-            char = char.upper()
-        return char
+            return char.upper()
+        elif self.color == 'b':
+            return char.lower()
 
     def move(self, position):
         self.position = position

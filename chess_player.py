@@ -1,6 +1,6 @@
 class ChessPlayer:
     def __init__(self, board, solver):
-        self.chess_board = board
+        self.chess_board = board    # To be deleted...
         self.solver = solver
 
     def solve(self, iteration_count=0):
