@@ -10,3 +10,12 @@ class ChessPlayer:
                 self.solver.next_step()
             except:
                 pass
+
+    def experiment_solve(self, iteration_count=0):
+        for _ in range(iteration_count):
+
+            try:
+                # For research / experiment purpose, 
+                return self.solver.next_step()
+            except:
+                pass
