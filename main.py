@@ -9,10 +9,10 @@ parent = 4
 mutation_prob = 0.25
 solver = SolverModelFactory.create_model("genetic_algorithm", parent, mutation_prob)
 solver.generate()
-solver.find_score()
-solver.fitness()
-solver.weighted_random()
-solver.parent_list_of_chess_piece_position_generator()
-solver.selection_and_crossover(0)
+solver.next_step()
+for i in range(0, solver.population_count):
+    print(solver.population[i].position)
+    print(solver.new_parent_position[i])
+
 
 

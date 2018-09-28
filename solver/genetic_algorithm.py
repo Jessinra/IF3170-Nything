@@ -13,11 +13,12 @@ class GeneticAlgorithm(BaseSolver):
         self.population_count = population_count
         self.mutation_prob = mutation_prob
         self.population = []
+        self.new_parent_position = []
         self.select_parent = []
 
     def generate(self):
         for i in range(self.population_count):
-            orders = FileParser.parse_data("something.txt")
+            orders = FileParser.parse_data("unit_test/testfile.txt")
             board = ChessBoard.load_board(orders)
             parent = Parent(board)
             self.population.append(parent)
@@ -76,46 +77,69 @@ class GeneticAlgorithm(BaseSolver):
             choice = random.choice(weighted_value)
             self.select_parent.append(choice)
 
-        print(self.select_parent)
-
-    def selection_and_crossover(self, index):
+    def selection_and_crossover_and_mutation(self, index):
         len_position = len(self.population[0].position)
         split_point = random.randint(1, len_position-1)
-        print(split_point)
+        # print(split_point)
 
         list_position_1 = copy.deepcopy((self.find_parent(self.select_parent[index])).position)
-        print(list_position_1)
+        # print(list_position_1)
         list_position_2 = list_position_1[split_point:len_position]
         list_position_1 = list_position_1[:split_point]
-        print(list_position_1)
-        print(list_position_2)
-        print('\n')
+        # print(list_position_1)
+        # print(list_position_2)
+        # print('\n')
 
         list_position_3 = copy.deepcopy((self.find_parent(self.select_parent[index+1])).position)
-        print(list_position_3)
+        # print(list_position_3)
         list_position_4 = list_position_3[split_point:len_position]
         list_position_3 = list_position_3[:split_point]
-        print(list_position_3)
-        print(list_position_4)
-        print('\n')
-
-        merged_parent = list(set(list_position_1 + list_position_3))
-        unpicked_position_list_2 = [item for item in merged_parent if item not in list_position_2]
-        unpicked_position_list_4 = [item for item in merged_parent if item not in list_position_4]
+        # print(list_position_3)
+        # print(list_position_4)
+        # print('\n')
 
         list_position_2 += list_position_3
         list_position_4 += list_position_1
 
-        print(list_position_2,'\n')
+        merged_parent = list(set(list_position_1 + list_position_3))
+        unpicked_position_list_2 = [item for item in merged_parent if item not in list_position_2]
+        unpicked_position_list_4 = [item for item in merged_parent if item not in list_position_4]
+        # print(unpicked_position_list_2)
+        # print(unpicked_position_list_4)
+        #
+        # print('unpick')
 
-    def selection_and_crossover_iteration(self):
-        selection_crossover_iteration = self.population_count/2 - 1
-        for index in range(0, selection_crossover_iteration, 2):
-            #while ():
-                self.selection_and_crossover(index)
+        list_position_2 = self.fix_child_list_maker(list_position_2, unpicked_position_list_2)
+        list_position_4 = self.fix_child_list_maker(list_position_4, unpicked_position_list_4)
 
-    def set_to_list(self):
-        pass
+        # print(list_position_2, '\n')
+        # print(list_position_4, '\n')
+        # print((set(list_position_2)), '\n')
+        # print((set(list_position_4)), '\n')
+
+        # self.mutation(list_position_2)
+        # print(list_position_2)
+
+        self.new_parent_position.append(list_position_2)
+        self.new_parent_position.append(list_position_4)
+
+    @staticmethod
+    def fix_child_list_maker(list_position, unpicked_number):
+        fix_child_list = []
+        j = 0
+        for position in list_position:
+            if position not in fix_child_list:
+                fix_child_list.append(position)
+            else:
+                fix_child_list.append(unpicked_number[j])
+                j += 1
+
+        return fix_child_list
+
+    def selection_and_crossover_and_mutation_iteration(self):
+        selection_crossover_mutation_iteration = int(self.population_count)
+        for index in range(0, selection_crossover_mutation_iteration, 2):
+            self.selection_and_crossover_and_mutation(index)
 
     def parent_list_of_chess_piece_position_generator(self):
         for parent in self.population:
@@ -127,9 +151,30 @@ class GeneticAlgorithm(BaseSolver):
             if id == parent.id:
                 return parent
 
-    def mutation(self):
+    def mutation(self, list_position):
         mutation_probability = [0] * 25 + [1] * 75
         choice = random.choice(mutation_probability)
+        if choice == 1:
+            point = list_position[0]
+            while point in list_position:
+                x = random.randint(0, 7)
+                y = random.randint(0, 7)
+                point = (x, y)
+            index = random.randint(0, len(self.population[0].position))
+            # print(point, index)
+            # print('poin, index')
+            list_position[index] = point
+
+    def replace_parent(self):
+        i = 0
+        for position in self.new_parent_position:
+            self.population[i].position = position
+            i += 1
 
     def next_step(self):
-        pass
+        self.find_score()
+        self.fitness()
+        self.weighted_random()
+        self.parent_list_of_chess_piece_position_generator()
+        self.selection_and_crossover_and_mutation_iteration()
+        self.replace_parent()
