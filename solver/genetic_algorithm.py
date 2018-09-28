@@ -21,7 +21,7 @@ class GeneticAlgorithm(BaseSolver):
             board = ChessBoard.load_board(orders)
             parent = Parent(board)
             self.population.append(parent)
-            if i == self.population_count-1:
+            if i == self.population_count - 1:
                 parent.reset_id()
 
     @staticmethod
@@ -46,7 +46,7 @@ class GeneticAlgorithm(BaseSolver):
             sum_of_score += parent.score
 
         for parent in self.population:
-            parent.fitness_score = parent.score/sum_of_score
+            parent.fitness_score = parent.score / sum_of_score
 
         self.fitness_percetager()
 

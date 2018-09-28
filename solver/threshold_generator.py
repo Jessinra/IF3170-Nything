@@ -4,7 +4,7 @@ from math import exp
 class ThresholdGenerator:
     def __init__(self):
         pass
-    
+
     def calculate_threshold(self, **kwargs):
         pass
 
@@ -25,7 +25,7 @@ class BoltzmannGenerator(ThresholdGenerator):
         self.ratio = ratio
 
     def calculate_threshold(self, value_difference, step):
-        current_temperature = self.initial_temperature / self.ratio**step
+        current_temperature = self.initial_temperature / self.ratio ** step
 
         if current_temperature <= 0:
             return 0

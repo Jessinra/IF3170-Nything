@@ -1,5 +1,6 @@
 class Parent:
     parent_id = 1
+
     def __init__(self, chess_board):
         self.chess_board = chess_board
         self.position = []
