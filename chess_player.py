@@ -16,6 +16,6 @@ class ChessPlayer:
 
             try:
                 # For research / experiment purpose, 
-                return self.solver.next_step()
+                return self.solver.experiment_next_step()
             except:
                 pass

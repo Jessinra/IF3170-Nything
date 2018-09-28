@@ -18,6 +18,21 @@ class SimulatedAnnealing(IncrementalSolver):
 
         self.step += 1
 
+    # Experiment purpose
+    def experiment_next_step(self):
+        moved_piece, new_position = self.get_new_move()
+        move_score = self.evaluate_move(moved_piece, new_position)
+
+        diff = self.current_score - move_score
+
+        if self.is_good_move(move_score) or self.should_bad_move_be_accepted(move_score):
+            self.move_chess_piece(moved_piece, new_position)
+            self.current_score = move_score
+
+        self.step += 1
+
+        return diff
+
     def get_new_move(self):
         return random.choice(self.chess_board.pieces), random.choice(self.get_empty_tiles())
 
