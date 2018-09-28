@@ -6,6 +6,7 @@ import random
 import itertools
 import copy
 
+
 class GeneticAlgorithm(BaseSolver):
     def __init__(self, population_count, mutation_prob):
         super().__init__()
@@ -16,8 +17,8 @@ class GeneticAlgorithm(BaseSolver):
 
     def generate(self):
         for i in range(self.population_count):
-            board = ChessBoard()
-            board = FileParser.load(board, "something.txt")
+            orders = FileParser.parse_data("something.txt")
+            board = ChessBoard.load_board(orders)
             parent = Parent(board)
             self.population.append(parent)
             if i == self.population_count-1:
@@ -75,58 +76,51 @@ class GeneticAlgorithm(BaseSolver):
             choice = random.choice(weighted_value)
             self.select_parent.append(choice)
 
-        # for parent in self.child_factory:
-        #     print(parent.fitness_score)
-        #
         print(self.select_parent)
 
-    def selection_and_crossover(self):
-        for i in range(0, self.population_count, 2):
-            len_position = len(self.population[0].position)
-            split_point = random.randint(1, len_position-1)
+    def selection_and_crossover(self, index):
+        len_position = len(self.population[0].position)
+        split_point = random.randint(1, len_position-1)
+        print(split_point)
 
-            list_position_1 = copy.deepcopy((self.find_parent(self.select_parent[i])).position)
-            list_position_2 = list_position_1[:split_point]
-            print(split_point)
-            print(list_position_1)
-            list_position_1 = list_position_1[split_point:len_position]
-            print(list_position_1)
-            print(list_position_2)
+        list_position_1 = copy.deepcopy((self.find_parent(self.select_parent[index])).position)
+        print(list_position_1)
+        list_position_2 = list_position_1[split_point:len_position]
+        list_position_1 = list_position_1[:split_point]
+        print(list_position_1)
+        print(list_position_2)
+        print('\n')
 
-            list_position_3 = copy.deepcopy((self.find_parent(self.select_parent[i+1])).position)
-            list_position_4 = list_position_3[:split_point]
-            print(split_point)
-            print(list_position_3)
-            list_position_3 = list_position_3[split_point:len_position]
-            print(list_position_3)
-            print(list_position_4)
+        list_position_3 = copy.deepcopy((self.find_parent(self.select_parent[index+1])).position)
+        print(list_position_3)
+        list_position_4 = list_position_3[split_point:len_position]
+        list_position_3 = list_position_3[:split_point]
+        print(list_position_3)
+        print(list_position_4)
+        print('\n')
 
-            list_position_2 += list_position_3
-            list_position_4 += list_position_1
+        merged_parent = list(set(list_position_1 + list_position_3))
+        unpicked_position_list_2 = [item for item in merged_parent if item not in list_position_2]
+        unpicked_position_list_4 = [item for item in merged_parent if item not in list_position_4]
 
-            print('\n')
-            print(list_position_2)
-            print(list_position_4)
-            print('\n')
+        list_position_2 += list_position_3
+        list_position_4 += list_position_1
 
-            print('this is the old parent')
-            print(self.population[i].position)
-            print(self.population[i + 1].position)
-            # self.population[i].position = list_position_2
-            # self.population[i+1].position = list_position_4
-            # print('this is the new parent')
-            # print(self.population[i].position)
-            # print(self.population[i + 1].position)
+        print(list_position_2,'\n')
 
-            print('\n')
-            print('Iterasi ke' + str(i))
-            print('\n')
+    def selection_and_crossover_iteration(self):
+        selection_crossover_iteration = self.population_count/2 - 1
+        for index in range(0, selection_crossover_iteration, 2):
+            #while ():
+                self.selection_and_crossover(index)
+
+    def set_to_list(self):
+        pass
 
     def parent_list_of_chess_piece_position_generator(self):
         for parent in self.population:
             for chess_piece in parent.chess_board.pieces:
                 parent.position.append(chess_piece.position)
-            #print(parent.position)
 
     def find_parent(self, id):
         for parent in self.population:
@@ -136,9 +130,6 @@ class GeneticAlgorithm(BaseSolver):
     def mutation(self):
         mutation_probability = [0] * 25 + [1] * 75
         choice = random.choice(mutation_probability)
-
-        # if choice:
-        #     piece = random.randint(self.population[0].chessboard.)
 
     def next_step(self):
         pass

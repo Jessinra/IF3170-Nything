@@ -13,4 +13,6 @@ solver.find_score()
 solver.fitness()
 solver.weighted_random()
 solver.parent_list_of_chess_piece_position_generator()
-solver.selection_and_crossover()
+solver.selection_and_crossover(0)
+
+

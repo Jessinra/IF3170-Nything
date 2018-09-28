@@ -22,6 +22,7 @@ class ChessBoard:
             for _ in range(order['count']):
                 chess_piece = ChessPieceFactory.create_chess_piece(order['type'], order['color'])
                 instance.add_piece_randomly(chess_piece)
+        return instance
 
     def initialize_empty_board(self):
         for row in range(self.max_row):
