@@ -5,9 +5,9 @@ from file_parser import FileParser
 from solver.threshold_generator import ConstantGenerator
 from copy import deepcopy
 
-parent = 4
+population_count = 4
 mutation_prob = 0.25
-solver = SolverModelFactory.create_model("genetic_algorithm", parent, mutation_prob)
+solver = SolverModelFactory.create_model("genetic_algorithm", population_count, mutation_prob)
 solver.generate()
 solver.next_step()
 
