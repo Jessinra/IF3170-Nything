@@ -22,7 +22,7 @@ class Parent(BaseSolver):
         other_score = other.evaluator.evaluate(other.chess_board)
         return self_score >= other_score
 
-    def move_chess_piece(self, chess_piece, position):
-        from_position = chess_piece.position
-        chess_piece.move(position)
-        self.chess_board.update_chess_piece(chess_piece, from_position)
+    def add_piece_to_board(self, chess_piece, position):
+        self.chess_board.set_tiles_value(position, chess_piece)
+        if chess_piece not in self.chess_board.pieces:
+            self.chess_board.pieces.append(chess_piece)

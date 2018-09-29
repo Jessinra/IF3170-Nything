@@ -147,9 +147,9 @@ class GeneticAlgorithm(BaseSolver):
         self.population_count = math.ceil(self.population_count * accepted_parent_percentage / 100)
         self.population = self.population[0:self.population_count]
 
-        print("GA Result")
-        for parent in self.population:
-            print(parent.position)
+        # print("GA Result")
+        # for parent in self.population:
+        #     print(parent.position)
 
     def copy_parent(self):
         new_parent = []
@@ -167,13 +167,18 @@ class GeneticAlgorithm(BaseSolver):
 
     def assigning_parent_position_to_chessboard(self):
         for parent in self.population:
+            parent.chess_board.initialize_empty_board()
             j = 0
             for chess_piece in parent.chess_board.pieces:
-                parent.move_chess_piece(chess_piece, parent.position[j])
+                parent.add_piece_to_board(chess_piece, parent.position[j])
                 j += 1
 
     def next_step(self):
         self.find_score()
+        print('previous score')
+        for parent in self.population:
+            print(parent.score)
+        print('\n')
         self.fitness()
         self.weighted_random()
         self.parent_list_of_chess_piece_position_generator()
@@ -181,9 +186,16 @@ class GeneticAlgorithm(BaseSolver):
         self.copy_parent()
         self.natural_selection(50)
         self.assigning_parent_position_to_chessboard()
+        # for parent in self.population:
+        #     print('empty tiles')
+        #     print(len(parent.chess_board.get_empty_tiles()))
+        #     print('position supposed to be')
+        #     print(parent.position)
+        #     print(parent.chess_board)
+
+        print('new score')
         for parent in self.population:
-            print('position supposed to be')
-            print(parent.position)
-            print(parent.chess_board)
+            print(parent.score)
+
 
 
