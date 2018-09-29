@@ -128,6 +128,7 @@ class GeneticAlgorithm(BaseSolver):
                 fix_child_list.append(unpicked_number[j])
                 j += 1
 
+
         return fix_child_list
 
     def mutation(self, list_position):
@@ -150,6 +151,7 @@ class GeneticAlgorithm(BaseSolver):
         # print("GA Result")
         # for parent in self.population:
         #     print(parent.position)
+        # print("=================")
 
     def copy_parent(self):
         new_parent = []
@@ -170,8 +172,19 @@ class GeneticAlgorithm(BaseSolver):
             parent.chess_board.initialize_empty_board()
             j = 0
             for chess_piece in parent.chess_board.pieces:
+                chess_piece.move(parent.position[j])
                 parent.add_piece_to_board(chess_piece, parent.position[j])
                 j += 1
+
+    def parent_position_cleaner(self):
+        for parent in self.population:
+            parent.position.clear()
+
+    def reassign_parent_id(self):
+        i = 1
+        for parent in self.population:
+            parent.id = i
+            i += 1
 
     def next_step(self):
         self.find_score()
@@ -182,20 +195,18 @@ class GeneticAlgorithm(BaseSolver):
         self.fitness()
         self.weighted_random()
         self.parent_list_of_chess_piece_position_generator()
+        # for parent in self.population:
+        #     print(parent.position)
         self.selection_and_crossover_and_mutation_iteration()
         self.copy_parent()
         self.natural_selection(50)
-        self.assigning_parent_position_to_chessboard()
         # for parent in self.population:
-        #     print('empty tiles')
-        #     print(len(parent.chess_board.get_empty_tiles()))
-        #     print('position supposed to be')
         #     print(parent.position)
-        #     print(parent.chess_board)
-
+        self.assigning_parent_position_to_chessboard()
+        self.parent_position_cleaner()
+        self.reassign_parent_id()
+        self.find_score()
         print('new score')
         for parent in self.population:
             print(parent.score)
-
-
-
+        print('\n')

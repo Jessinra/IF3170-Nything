@@ -9,8 +9,7 @@ population_count = 4
 mutation_prob = 0.25
 solver = SolverModelFactory.create_model("genetic_algorithm", population_count, mutation_prob)
 solver.generate()
-for i in range(0, 2):
+for i in range(0, 10):
+    print('try :' + str(i+1))
     solver.next_step()
-
-
 

@@ -26,3 +26,4 @@ class Parent(BaseSolver):
         self.chess_board.set_tiles_value(position, chess_piece)
         if chess_piece not in self.chess_board.pieces:
             self.chess_board.pieces.append(chess_piece)
+
