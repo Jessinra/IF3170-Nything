@@ -144,9 +144,6 @@ class GeneticAlgorithm(BaseSolver):
 
     def natural_selection(self, accepted_parent_percentage):
         self.population = sorted(self.population)
-        #for parent in self.population:
-            # print(parent.position)
-            # print(parent.evaluator.evaluate(parent.chess_board))
         self.population_count = math.ceil(self.population_count * accepted_parent_percentage / 100)
         self.population = self.population[0:self.population_count]
 
@@ -168,86 +165,25 @@ class GeneticAlgorithm(BaseSolver):
         self.population = self.population + new_parent
         self.population_count = self.population_count * 2
 
-        # for parent in self.population:
-        #     print(parent.position)
-        #     print(parent.chess_board)
-        # print(self.population[0].chess_board)
-        #
-        # print('------------------------')
-        # print('test')
-        # x = self.population[0].chess_board.pieces[0]
-        # y = x.position
-        # x.position = (0, 0)
-        # self.population[0].chess_board.update_chess_piece(x, y)
-        #
-        # i = 1
-        # for parent in self.population:
-        #     print(i)
-        #     print(parent.chess_board)
-        #     i += 1
-
-
-
     def assigning_parent_position_to_chessboard(self):
-        # for parent in self.population:
-        #     print(parent.position)
-        #     print(parent.chess_board)
-        # print(self.population[0].chess_board)
-        #
-        # print('------------------------')
-        # print('test')
-        # x = self.population[0].chess_board.pieces[0]
-        # y = x.position
-        # x.position = (0, 0)
-        # self.population[0].chess_board.update_chess_piece(x, y)
-        #
-        # i = 1
-        # for parent in self.population:
-        #     print(i)
-        #     print(parent.chess_board)
-        #     i += 1
-
-        i = 0
         for parent in self.population:
             j = 0
-            last_position = []
-            new_position = []
-            position = parent.position
             for chess_piece in parent.chess_board.pieces:
-                from_position = chess_piece.position
-                last_position.append(from_position)
-                chess_piece.move(position[j])
-                new_position.append(position[j])
-                parent.chess_board.update_chess_piece(chess_piece, from_position)
+                parent.move_chess_piece(chess_piece, parent.position[j])
                 j += 1
-            print('\n')
-            print('last position')
-            print(last_position)
-            print('new position')
-            print(new_position)
-            print('next piece \n')
-            i += 1
 
     def next_step(self):
         self.find_score()
         self.fitness()
         self.weighted_random()
         self.parent_list_of_chess_piece_position_generator()
-        # for parent in self.population:
-        #     print(parent.position)
-        #     print(parent.chess_board)
         self.selection_and_crossover_and_mutation_iteration()
         self.copy_parent()
         self.natural_selection(50)
         self.assigning_parent_position_to_chessboard()
-        #for parent in self.population:
-            # print('position supposed to be')
-            # print(parent.position)
-            # print(parent.chess_board)
-            #print('chess piece position actually')
-            # pos = []
-            # for chesspiece in parent.chess_board.pieces:
-            #     pos.append(chesspiece.position)
-            # print(pos)
-            # print('\n')
+        for parent in self.population:
+            print('position supposed to be')
+            print(parent.position)
+            print(parent.chess_board)
+
 

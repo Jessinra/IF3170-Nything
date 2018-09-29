@@ -21,3 +21,8 @@ class Parent(BaseSolver):
         self_score = self.evaluator.evaluate(self.chess_board)
         other_score = other.evaluator.evaluate(other.chess_board)
         return self_score >= other_score
+
+    def move_chess_piece(self, chess_piece, position):
+        from_position = chess_piece.position
+        chess_piece.move(position)
+        self.chess_board.update_chess_piece(chess_piece, from_position)
