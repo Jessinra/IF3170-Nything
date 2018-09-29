@@ -5,6 +5,7 @@ from solver.parent import Parent
 import random
 import itertools
 import copy
+import math
 
 
 class GeneticAlgorithm(BaseSolver):
@@ -80,23 +81,14 @@ class GeneticAlgorithm(BaseSolver):
     def selection_and_crossover_and_mutation(self, index):
         len_position = len(self.population[0].position)
         split_point = random.randint(1, len_position-1)
-        # print(split_point)
 
         list_position_1 = copy.deepcopy((self.find_parent(self.select_parent[index])).position)
-        # print(list_position_1)
         list_position_2 = list_position_1[split_point:len_position]
         list_position_1 = list_position_1[:split_point]
-        # print(list_position_1)
-        # print(list_position_2)
-        # print('\n')
 
         list_position_3 = copy.deepcopy((self.find_parent(self.select_parent[index+1])).position)
-        # print(list_position_3)
         list_position_4 = list_position_3[split_point:len_position]
         list_position_3 = list_position_3[:split_point]
-        # print(list_position_3)
-        # print(list_position_4)
-        # print('\n')
 
         list_position_2 += list_position_3
         list_position_4 += list_position_1
@@ -104,24 +96,26 @@ class GeneticAlgorithm(BaseSolver):
         merged_parent = list(set(list_position_1 + list_position_3))
         unpicked_position_list_2 = [item for item in merged_parent if item not in list_position_2]
         unpicked_position_list_4 = [item for item in merged_parent if item not in list_position_4]
-        # print(unpicked_position_list_2)
-        # print(unpicked_position_list_4)
-        #
-        # print('unpick')
-
         list_position_2 = self.fix_child_list_maker(list_position_2, unpicked_position_list_2)
         list_position_4 = self.fix_child_list_maker(list_position_4, unpicked_position_list_4)
 
-        # print(list_position_2, '\n')
-        # print(list_position_4, '\n')
-        # print((set(list_position_2)), '\n')
-        # print((set(list_position_4)), '\n')
-
-        # self.mutation(list_position_2)
-        # print(list_position_2)
-
         self.new_parent_position.append(list_position_2)
         self.new_parent_position.append(list_position_4)
+
+    def selection_and_crossover_and_mutation_iteration(self):
+        selection_crossover_mutation_iteration = int(self.population_count)
+        for index in range(0, selection_crossover_mutation_iteration, 2):
+            self.selection_and_crossover_and_mutation(index)
+
+    def parent_list_of_chess_piece_position_generator(self):
+        for parent in self.population:
+            for chess_piece in parent.chess_board.pieces:
+                parent.position.append(chess_piece.position)
+
+    def find_parent(self, p_id):
+        for parent in self.population:
+            if p_id == parent.id:
+                return parent
 
     @staticmethod
     def fix_child_list_maker(list_position, unpicked_number):
@@ -136,21 +130,6 @@ class GeneticAlgorithm(BaseSolver):
 
         return fix_child_list
 
-    def selection_and_crossover_and_mutation_iteration(self):
-        selection_crossover_mutation_iteration = int(self.population_count)
-        for index in range(0, selection_crossover_mutation_iteration, 2):
-            self.selection_and_crossover_and_mutation(index)
-
-    def parent_list_of_chess_piece_position_generator(self):
-        for parent in self.population:
-            for chess_piece in parent.chess_board.pieces:
-                parent.position.append(chess_piece.position)
-
-    def find_parent(self, id):
-        for parent in self.population:
-            if id == parent.id:
-                return parent
-
     def mutation(self, list_position):
         mutation_probability = [0] * 25 + [1] * 75
         choice = random.choice(mutation_probability)
@@ -161,14 +140,45 @@ class GeneticAlgorithm(BaseSolver):
                 y = random.randint(0, 7)
                 point = (x, y)
             index = random.randint(0, len(self.population[0].position))
-            # print(point, index)
-            # print('poin, index')
             list_position[index] = point
 
-    def replace_parent(self):
+    def natural_selection(self, accepted_parent_percentage):
+        self.population = sorted(self.population)
+        for parent in self.population:
+            print(parent.position)
+            print(parent.evaluator.evaluate(parent.chess_board))
+        self.population_count = math.ceil(self.population_count * accepted_parent_percentage / 100)
+        self.population = self.population[0:self.population_count]
+
+        print("GA Result")
+        for parent in self.population:
+            print(parent.position)
+
+    def copy_parent(self):
+        new_parent = []
+        for parent in self.population:
+            deep_copied = copy.deepcopy(parent)
+            new_parent.append(deep_copied)
+
         i = 0
-        for position in self.new_parent_position:
-            self.population[i].position = position
+        for parent in new_parent:
+            parent.position = self.new_parent_position[i]
+            i += 1
+
+        self.population = self.population + new_parent
+        self.population_count = self.population_count * 2
+
+    def assigning_parent_position_to_chessboard(self):
+        i = 0
+        for parent in self.population:
+            j = 0
+            for chess_piece in parent.chess_board.pieces:
+                from_position = chess_piece.position
+                #print(from_position)
+                chess_piece.move(self.new_parent_position[i][j])
+                #print(self.new_parent_position[i][])
+                parent.chess_board.update_chess_piece(chess_piece, from_position)
+                j += 1
             i += 1
 
     def next_step(self):
@@ -176,5 +186,13 @@ class GeneticAlgorithm(BaseSolver):
         self.fitness()
         self.weighted_random()
         self.parent_list_of_chess_piece_position_generator()
+        for parent in self.population:
+            print(parent.position)
+            print(parent.chess_board)
         self.selection_and_crossover_and_mutation_iteration()
-        self.replace_parent()
+        self.copy_parent()
+        self.natural_selection(50)
+        self.assigning_parent_position_to_chessboard()
+        for parent in self.population:
+            print(parent.position)
+            print(parent.chess_board)
