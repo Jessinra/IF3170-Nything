@@ -7,9 +7,17 @@ from copy import deepcopy
 
 population_count = 4
 mutation_prob = 0.25
-solver = SolverModelFactory.create_model("genetic_algorithm", population_count, mutation_prob)
-solver.generate()
-for i in range(0, 10):
+population_survival = 0.5
+max_population = 5000
+solver = SolverModelFactory.create_model("genetic_algorithm", 
+    population_count, 
+    max_population,
+    mutation_prob, 
+    population_survival)
+
+order = FileParser.parse_data("example_board/3queen.txt")
+solver.generate_population(order)
+for i in range(0, 5):
     print('try :' + str(i+1))
     solver.next_step()
 

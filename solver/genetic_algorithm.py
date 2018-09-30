@@ -1,213 +1,225 @@
 from solver.base_solver import BaseSolver
 from file_parser import FileParser
 from chess_board import ChessBoard
-from solver.parent import Parent
+from solver.parent import Individuals
 import random
 import itertools
 import copy
 import math
+import numpy
 
 
 class GeneticAlgorithm(BaseSolver):
-    def __init__(self, population_count, mutation_prob):
+    def __init__(self, population_count, max_population, mutation_probability, population_survival_rate):
         super().__init__()
         self.population_count = population_count
-        self.mutation_prob = mutation_prob
+        self.max_population = max_population
+        self.mutation_probability = mutation_probability
+        self.population_survival_rate = population_survival_rate    # keep best n-% every iteration
         self.population = []
-        self.new_parent_position = []
-        self.select_parent = []
+        self.new_children = []
+        self.crossovered_pieces_position = []
+        self.selected_parents_id = []
 
-    def generate(self):
-        for i in range(self.population_count):
-            orders = FileParser.parse_data("unit_test/testfile.txt")
-            board = ChessBoard.load_board(orders)
-            parent = Parent(board)
-            self.population.append(parent)
-            if i == self.population_count - 1:
-                parent.reset_id()
-
-    @staticmethod
-    def get_tiles(board):
-        arr_tiles = []
-        for i in range(board.min_row, board.max_row):
-            for j in range(board.min_col, board.max_col):
-                tiles = board.get_tile_status((i, j))
-                if tiles:
-                    arr_tiles.append(j)
-        return arr_tiles
-
-    def find_score(self):
-        for parent in self.population:
-            parent.score = self.evaluator.evaluate(parent.chess_board)
-
-    def fitness(self):
-        sum_of_score = 0
-        self.fitness_positivy()
-
-        for parent in self.population:
-            sum_of_score += parent.score
-
-        for parent in self.population:
-            parent.fitness_score = parent.score / sum_of_score
-
-        self.fitness_percetager()
-
-    def fitness_positivy(self):
-        parent_score = []
-        for parent in self.population:
-            parent_score.append(parent.score)
-
-        minimum_score = min(parent_score)
-
-        if minimum_score < 0:
-            for parent in self.population:
-                parent.score = parent.score + abs(minimum_score) + 1
-
-    def fitness_percetager(self):
-        for parent in self.population:
-            parent.fitness_score = int(parent.fitness_score * 100)
-
-    def weighted_random(self):
-        weighted_value = []
-        for parent in self.population:
-            weighted_value.append([parent.id] * parent.fitness_score)
-
-        weighted_value = list(itertools.chain(*weighted_value))
+    def generate_population(self, orders):
 
         for _ in range(self.population_count):
-            choice = random.choice(weighted_value)
-            self.select_parent.append(choice)
+            individual = self.create_individual(orders)
+            self.population.append(individual)
 
+    def create_individual(self, orders):
+        chess_board = ChessBoard.load_board(orders)
+        return Individuals(chess_board)
+
+    def set_score_for_each_individual(self):
+        for individual in self.population:
+            individual.set_score()
+
+    def set_fitness_score_for_each_individual(self):
+        self.shifting_all_individual_score_to_positive()
+        
+        sum_of_score = 0
+        for individual in self.population:
+            sum_of_score += individual.score
+
+        for individual in self.population:
+            individual.fitness_score = individual.score / sum_of_score
+
+    def shifting_all_individual_score_to_positive(self):
+        individual_scores = []
+        for individual in self.population:
+            individual_scores.append(individual.score)
+
+        minimum_score = min(individual_scores)
+
+        if minimum_score < 0:
+            for individual in self.population:
+                individual.score += abs(minimum_score) + 1
+
+    def fitness_to_percent_for_each_individual(self):
+        for individual in self.population:
+            individual.convert_fitness_score_to_percent()
+
+    def select_parents_with_weighted_random(self):   
+        population_id = [i for i in range(1, self.population_count + 1)]
+        individual_weight = [individual.fitness_score for individual in self.population]
+        parent_size = int(self.population_count // 2 * 2 )
+
+        self.selected_parents_id = numpy.random.choice(
+            a=population_id,
+            size=parent_size,
+            p=individual_weight
+        )
+
+    # please refactor this
     def selection_and_crossover_and_mutation(self, index):
-        len_position = len(self.population[0].position)
-        split_point = random.randint(1, len_position-1)
+        split_point = self.get_split_point()
 
-        list_position_1 = copy.deepcopy((self.find_parent(self.select_parent[index])).position)
-        list_position_2 = list_position_1[split_point:len_position]
-        list_position_1 = list_position_1[:split_point]
+        parent_01 = self.find_individual_by_id(self.selected_parents_id[index])
+        parent_02 = self.find_individual_by_id(self.selected_parents_id[index+1])
+        child_01, child_02 = self.crossover_parents(parent_01, parent_02, split_point)
 
-        list_position_3 = copy.deepcopy((self.find_parent(self.select_parent[index+1])).position)
-        list_position_4 = list_position_3[split_point:len_position]
-        list_position_3 = list_position_3[:split_point]
+        available_positions = list(set(parent_01.pieces_position + parent_02.pieces_position))
+        child_01_unused_positions = self.get_unused_positions(available_positions, child_01)
+        child_02_unused_positions = self.get_unused_positions(available_positions, child_02)
 
-        list_position_2 += list_position_3
-        list_position_4 += list_position_1
+        child_01 = self.change_duplicate_positions(child_01, child_01_unused_positions)
+        child_02 = self.change_duplicate_positions(child_02, child_02_unused_positions)
 
-        merged_parent = list(set(list_position_1 + list_position_3))
-        unpicked_position_list_2 = [item for item in merged_parent if item not in list_position_2]
-        unpicked_position_list_4 = [item for item in merged_parent if item not in list_position_4]
-        list_position_2 = self.fix_child_list_maker(list_position_2, unpicked_position_list_2)
-        list_position_4 = self.fix_child_list_maker(list_position_4, unpicked_position_list_4)
-
-        self.new_parent_position.append(list_position_2)
-        self.new_parent_position.append(list_position_4)
-
-    def selection_and_crossover_and_mutation_iteration(self):
-        selection_crossover_mutation_iteration = int(self.population_count)
-        for index in range(0, selection_crossover_mutation_iteration, 2):
-            self.selection_and_crossover_and_mutation(index)
-
-    def parent_list_of_chess_piece_position_generator(self):
-        for parent in self.population:
-            for chess_piece in parent.chess_board.pieces:
-                parent.position.append(chess_piece.position)
-
-    def find_parent(self, p_id):
-        for parent in self.population:
-            if p_id == parent.id:
-                return parent
+        self.crossovered_pieces_position.append(child_01)
+        self.crossovered_pieces_position.append(child_02)
 
     @staticmethod
-    def fix_child_list_maker(list_position, unpicked_number):
-        fix_child_list = []
-        j = 0
-        for position in list_position:
-            if position not in fix_child_list:
-                fix_child_list.append(position)
-            else:
-                if j < len(unpicked_number):
-                    fix_child_list.append(unpicked_number[j])
-                    j += 1
+    def get_unused_positions(available_positions, child):
+        return [p for p in available_positions if p not in child]
 
 
-        return fix_child_list
+    def crossover_parents(self, parent_01, parent_02, split_point):
+        
+        parent_01_pieces_position = parent_01.deepcopy_pieces_position()
+        parent_02_pieces_position = parent_02.deepcopy_pieces_position()
+        
+        parent_01_gen_front = parent_01_pieces_position[:split_point]
+        parent_01_gen_back = parent_01_pieces_position[split_point:]
+        parent_02_gen_front = parent_02_pieces_position[:split_point]
+        parent_02_gen_back = parent_02_pieces_position[split_point:]
 
-    def mutation(self, list_position):
-        mutation_probability = [0] * 25 + [1] * 75
-        choice = random.choice(mutation_probability)
-        if choice == 1:
-            point = list_position[0]
-            while point in list_position:
-                x = random.randint(0, 7)
-                y = random.randint(0, 7)
-                point = (x, y)
-            index = random.randint(0, len(self.population[0].position))
-            list_position[index] = point
+        child_01 = parent_01_gen_front + parent_02_gen_back
+        child_02 = parent_02_gen_front + parent_01_gen_back
 
-    def natural_selection(self, accepted_parent_percentage):
-        self.population = sorted(self.population)
-        self.population_count = math.ceil(self.population_count * accepted_parent_percentage / 100)
-        self.population = self.population[0:self.population_count]
+        return child_01, child_02
 
-        # print("GA Result")
-        # for parent in self.population:
-        #     print(parent.position)
-        # print("=================")
+    
 
-    def copy_parent(self):
-        new_parent = []
-        for parent in self.population:
-            deep_copied = copy.deepcopy(parent)
-            new_parent.append(deep_copied)
+    def get_split_point(self):
 
+        # Get sample of individual to get piece_position length
+        len_position = len(self.population[0].pieces_position)  
+        split_point = random.randint(1, len_position - 1)
+        return split_point
+
+    def selection_and_crossover_and_mutation_iteration(self):
+
+        # (skip iteration by 2) e.g. individual 0 will be matched with individual 1, 2nd with 3rd, and so on...
+        # Also atempt to skip remaining individual if it's odd number
+        for index in range(0, len(self.selected_parents_id), 2):
+            self.selection_and_crossover_and_mutation(index)
+
+    def generate_pieces_position_for_each_individual(self):
+        for individual in self.population:
+            individual.generate_pieces_position()
+
+    def find_individual_by_id(self, individual_id):
+        for individual in self.population:
+            if individual_id == individual.id:
+                return individual
+
+    @staticmethod
+    def change_duplicate_positions(position_list, unpicked_numbers):
+        filtered_position = []
         i = 0
-        for parent in new_parent:
-            parent.position = self.new_parent_position[i]
-            i += 1
+        for position in position_list:
+            if position not in filtered_position:
+                filtered_position.append(position)
+            else:
+                if i < len(unpicked_numbers):
+                    filtered_position.append(unpicked_numbers[i])
+                    i += 1
 
-        self.population = self.population + new_parent
-        self.population_count = self.population_count * 2
+        return filtered_position
 
-    def assigning_parent_position_to_chessboard(self):
-        for parent in self.population:
-            parent.chess_board.initialize_empty_board()
-            j = 0
-            for chess_piece in parent.chess_board.pieces:
-                chess_piece.move(parent.position[j])
-                parent.add_piece_to_board(chess_piece, parent.position[j])
-                j += 1
+    def try_to_mutate_individual(self, individuals):
+        if self.is_mutation_occurring():
+            individuals.mutate_pieces_position()
 
-    def parent_position_cleaner(self):
-        for parent in self.population:
-            parent.position.clear()
+    def is_mutation_occurring(self):
+        random_number = random.random() # random float 0 to 1
+        return random_number < self.mutation_probability
 
-    def reassign_parent_id(self):
-        i = 1
-        for parent in self.population:
-            parent.id = i
-            i += 1
+    def natural_selection(self):
+        self.population = sorted(self.population, reverse=True)
+
+        self.remove_exceeding_individuals()            
+        self.get_survival_individual_count()
+        self.remove_individual_without_partner()
+
+        self.population = self.population[:self.population_count]
+
+
+
+    def remove_exceeding_individuals(self):
+        if self.population_count > self.max_population:
+            self.population_count = self.max_population
+
+    def get_survival_individual_count(self):
+        self.population_count = math.ceil(self.population_count * self.population_survival_rate)
+
+    def remove_individual_without_partner(self):
+        if self.population_count % 2 == 1:
+            self.population_count -= 1
+
+    # Please rename this
+    def create_crossovered_individuals(self):
+
+        self.new_children = self.create_children()
+        self.configure_pieces_for_each_child()
+        self.add_children_to_population()
+
+    def add_children_to_population(self):
+        self.population = self.population + self.new_children
+        self.population_count = self.population_count + len(self.new_children)
+        self.new_children = []
+
+    def create_children(self):
+
+        amount = int(self.population_count // 2 * 2)
+        return copy.deepcopy(self.population[:amount])
+
+    def configure_pieces_for_each_child(self):
+        for i in range(0, len(self.new_children)):
+            child = self.new_children[i]
+            child.pieces_position = self.crossovered_pieces_position[i]
+            child.place_chess_piece_according_to_pieces_positions()
+
+    def reassign_individuals_id(self):
+        Individuals.reset_individual_count()
+        for individual in self.population:
+            individual.set_id()
+
+    def teardown(self):
+        self.new_children = []
+        self.crossovered_pieces_position = []
+        self.selected_parents_id = []
 
     def next_step(self):
-        self.find_score()
-        print('previous score')
-        for parent in self.population:
-            print(parent.score)
-        print('\n')
-        self.fitness()
-        self.weighted_random()
-        self.parent_list_of_chess_piece_position_generator()
-        # for parent in self.population:
-        #     print(parent.position)
+
+        self.set_score_for_each_individual()
+        self.set_fitness_score_for_each_individual()
+        self.generate_pieces_position_for_each_individual()
+        self.select_parents_with_weighted_random()
         self.selection_and_crossover_and_mutation_iteration()
-        self.copy_parent()
-        self.natural_selection(50)
-        # for parent in self.population:
-        #     print(parent.position)
-        self.assigning_parent_position_to_chessboard()
-        self.parent_position_cleaner()
-        self.reassign_parent_id()
-        self.find_score()
-        print('new score')
-        for parent in self.population:
-            print(parent.score)
-        print('\n')
+        self.create_crossovered_individuals()
+        self.natural_selection()
+        self.reassign_individuals_id()
+        self.teardown()
+

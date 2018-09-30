@@ -1,29 +1,54 @@
 from solver.base_solver import BaseSolver
+import random
+import copy
 
-
-class Parent(BaseSolver):
-    parent_id = 1
+class Individuals(BaseSolver):
+    individual_count = 0
 
     def __init__(self, chess_board):
         super().__init__()
         self.chess_board = chess_board
-        self.position = []
+        self.pieces_position = []
         self.score = 0
         self.fitness_score = 0
-        self.id = Parent.parent_id
-        Parent.parent_id += 1
+        self.set_id()
 
-    @staticmethod
-    def reset_id():
-        Parent.parent_id = 1
+    def set_score(self):
+        self.score = self.evaluator.evaluate(self.chess_board)
+
+    def generate_pieces_position(self):
+        self.pieces_position = []
+        for chess_piece in self.chess_board.pieces:
+            self.pieces_position.append(chess_piece.position)
+
+    def mutate_pieces_position(self):
+
+        empty_tiles = self.chess_board.get_empty_tiles()
+        random_index = random.randint(0, len(self.pieces_position))
+        self.pieces_position[random_index] = random.choice(empty_tiles)
+
+    def place_chess_piece_according_to_pieces_positions(self):
+        
+        self.chess_board.initialize_empty_board()
+        for i in range(0, len(self.pieces_position)):
+            chess_piece = self.chess_board.pieces[i]
+            chess_piece.move(self.pieces_position[i])
+            self.add_piece_to_board(chess_piece)
+
+    def set_id(self):
+        Individuals.individual_count += 1
+        self.id = Individuals.individual_count
+
+    def deepcopy_pieces_position(self):
+        return copy.deepcopy(self.pieces_position)
+
+    @staticmethod     
+    def reset_individual_count():
+        Individuals.individual_count = 0
 
     def __lt__(self, other):
-        self_score = self.evaluator.evaluate(self.chess_board)
-        other_score = other.evaluator.evaluate(other.chess_board)
-        return self_score >= other_score
+        return self.score < other.score
 
-    def add_piece_to_board(self, chess_piece, position):
-        self.chess_board.set_tiles_value(position, chess_piece)
-        if chess_piece not in self.chess_board.pieces:
-            self.chess_board.pieces.append(chess_piece)
+    def add_piece_to_board(self, chess_piece):
+        self.chess_board.add_piece_to_board(chess_piece)
 
