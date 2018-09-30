@@ -125,8 +125,9 @@ class GeneticAlgorithm(BaseSolver):
             if position not in fix_child_list:
                 fix_child_list.append(position)
             else:
-                fix_child_list.append(unpicked_number[j])
-                j += 1
+                if j < len(unpicked_number):
+                    fix_child_list.append(unpicked_number[j])
+                    j += 1
 
 
         return fix_child_list
