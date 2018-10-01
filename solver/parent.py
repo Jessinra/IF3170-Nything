@@ -24,7 +24,9 @@ class Individuals(BaseSolver):
     def mutate_pieces_position(self):
 
         empty_tiles = self.chess_board.get_empty_tiles()
-        random_index = random.randint(0, len(self.pieces_position))
+        random_index = random.randint(0, len(self.pieces_position) - 1)
+
+        print(len(self.pieces_position), random_index)
         self.pieces_position[random_index] = random.choice(empty_tiles)
 
     def place_chess_piece_according_to_pieces_positions(self):

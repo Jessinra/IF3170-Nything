@@ -43,7 +43,11 @@ class GeneticAlgorithm(BaseSolver):
             sum_of_score += individual.score
 
         for individual in self.population:
-            individual.fitness_score = individual.score / sum_of_score
+
+            try:
+                individual.fitness_score = individual.score / sum_of_score
+            except:
+                individual.fitness_score = 0
 
     def shifting_all_individual_score_to_positive(self):
         individual_scores = []
@@ -65,11 +69,20 @@ class GeneticAlgorithm(BaseSolver):
         individual_weight = [individual.fitness_score for individual in self.population]
         parent_size = int(self.population_count // 2 * 2 )
 
+        try:
+            self.select_parent_id_weighted_random(population_id, parent_size, individual_weight)
+        except:
+            self.select_parent_id_default_random(population_id, parent_size)
+
+    def select_parent_id_weighted_random(self, population_id, parent_size, individual_weight):
         self.selected_parents_id = numpy.random.choice(
             a=population_id,
             size=parent_size,
             p=individual_weight
         )
+
+    def select_parent_id_default_random(self, population_id, parent_size):
+        self.selected_parents_id = random.choices(population_id, k=parent_size)
 
     # please refactor this
     def selection_and_crossover_and_mutation(self, index):
@@ -115,7 +128,7 @@ class GeneticAlgorithm(BaseSolver):
 
         # Get sample of individual to get piece_position length
         len_position = len(self.population[0].pieces_position)  
-        split_point = random.randint(1, len_position - 1)
+        split_point = random.randint(1, len_position - 2)
         return split_point
 
     def selection_and_crossover_and_mutation_iteration(self):
@@ -200,6 +213,7 @@ class GeneticAlgorithm(BaseSolver):
             child = self.new_children[i]
             child.pieces_position = self.crossovered_pieces_position[i]
             child.place_chess_piece_according_to_pieces_positions()
+            self.try_to_mutate_individual(child)
 
     def reassign_individuals_id(self):
         Individuals.reset_individual_count()
@@ -216,6 +230,8 @@ class GeneticAlgorithm(BaseSolver):
         self.set_score_for_each_individual()
         self.set_fitness_score_for_each_individual()
         self.generate_pieces_position_for_each_individual()
+
+
         self.select_parents_with_weighted_random()
         self.selection_and_crossover_and_mutation_iteration()
         self.create_crossovered_individuals()
@@ -223,3 +239,9 @@ class GeneticAlgorithm(BaseSolver):
         self.reassign_individuals_id()
         self.teardown()
 
+        # print()
+        # print(self.population_count)
+        # print("best", max([x.score for x in self.population]))
+        # print("top 4")
+        # for x in self.population:
+        #     print(x.pieces_position)
