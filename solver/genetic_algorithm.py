@@ -1,9 +1,7 @@
 from solver.base_solver import BaseSolver
-from file_parser import FileParser
 from chess_board import ChessBoard
-from solver.parent import Individuals
+from solver.individual import Individuals
 import random
-import itertools
 import copy
 import math
 import numpy
@@ -15,19 +13,19 @@ class GeneticAlgorithm(BaseSolver):
         self.population_count = population_count
         self.max_population = max_population
         self.mutation_probability = mutation_probability
-        self.population_survival_rate = population_survival_rate    # keep best n-% every iteration
+        self.population_survival_rate = population_survival_rate  # keep best n-% every iteration
         self.population = []
         self.new_children = []
         self.crossovered_pieces_position = []
         self.selected_parents_id = []
 
     def generate_population(self, orders):
-
         for _ in range(self.population_count):
             individual = self.create_individual(orders)
             self.population.append(individual)
 
-    def create_individual(self, orders):
+    @staticmethod
+    def create_individual(orders):
         chess_board = ChessBoard.load_board(orders)
         return Individuals(chess_board)
 
@@ -37,13 +35,12 @@ class GeneticAlgorithm(BaseSolver):
 
     def set_fitness_score_for_each_individual(self):
         self.shifting_all_individual_score_to_positive()
-        
+
         sum_of_score = 0
         for individual in self.population:
             sum_of_score += individual.score
 
         for individual in self.population:
-
             try:
                 individual.fitness_score = individual.score / sum_of_score
             except:
@@ -64,10 +61,10 @@ class GeneticAlgorithm(BaseSolver):
         for individual in self.population:
             individual.convert_fitness_score_to_percent()
 
-    def select_parents_with_weighted_random(self):   
+    def select_parents_with_weighted_random(self):
         population_id = [i for i in range(1, self.population_count + 1)]
         individual_weight = [individual.fitness_score for individual in self.population]
-        parent_size = int(self.population_count // 2 * 2 )
+        parent_size = int(self.population_count // 2 * 2)
 
         try:
             self.select_parent_id_weighted_random(population_id, parent_size, individual_weight)
@@ -89,7 +86,7 @@ class GeneticAlgorithm(BaseSolver):
         split_point = self.get_split_point()
 
         parent_01 = self.find_individual_by_id(self.selected_parents_id[index])
-        parent_02 = self.find_individual_by_id(self.selected_parents_id[index+1])
+        parent_02 = self.find_individual_by_id(self.selected_parents_id[index + 1])
         child_01, child_02 = self.crossover_parents(parent_01, parent_02, split_point)
 
         available_positions = list(set(parent_01.pieces_position + parent_02.pieces_position))
@@ -106,12 +103,12 @@ class GeneticAlgorithm(BaseSolver):
     def get_unused_positions(available_positions, child):
         return [p for p in available_positions if p not in child]
 
+    @staticmethod
+    def crossover_parents(parent_01, parent_02, split_point):
 
-    def crossover_parents(self, parent_01, parent_02, split_point):
-        
         parent_01_pieces_position = parent_01.deepcopy_pieces_position()
         parent_02_pieces_position = parent_02.deepcopy_pieces_position()
-        
+
         parent_01_gen_front = parent_01_pieces_position[:split_point]
         parent_01_gen_back = parent_01_pieces_position[split_point:]
         parent_02_gen_front = parent_02_pieces_position[:split_point]
@@ -122,12 +119,10 @@ class GeneticAlgorithm(BaseSolver):
 
         return child_01, child_02
 
-    
-
     def get_split_point(self):
 
         # Get sample of individual to get piece_position length
-        len_position = len(self.population[0].pieces_position)  
+        len_position = len(self.population[0].pieces_position)
         split_point = random.randint(1, len_position - 2)
         return split_point
 
@@ -166,19 +161,17 @@ class GeneticAlgorithm(BaseSolver):
             individuals.mutate_pieces_position()
 
     def is_mutation_occurring(self):
-        random_number = random.random() # random float 0 to 1
+        random_number = random.random()  # random float 0 to 1
         return random_number < self.mutation_probability
 
     def natural_selection(self):
         self.population = sorted(self.population, reverse=True)
 
-        self.remove_exceeding_individuals()            
+        self.remove_exceeding_individuals()
         self.get_survival_individual_count()
         self.remove_individual_without_partner()
 
         self.population = self.population[:self.population_count]
-
-
 
     def remove_exceeding_individuals(self):
         if self.population_count > self.max_population:
@@ -230,8 +223,6 @@ class GeneticAlgorithm(BaseSolver):
         self.set_score_for_each_individual()
         self.set_fitness_score_for_each_individual()
         self.generate_pieces_position_for_each_individual()
-
-
         self.select_parents_with_weighted_random()
         self.selection_and_crossover_and_mutation_iteration()
         self.create_crossovered_individuals()

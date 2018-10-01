@@ -2,6 +2,7 @@ from solver.base_solver import BaseSolver
 import random
 import copy
 
+
 class Individuals(BaseSolver):
     individual_count = 0
 
@@ -30,7 +31,7 @@ class Individuals(BaseSolver):
         self.pieces_position[random_index] = random.choice(empty_tiles)
 
     def place_chess_piece_according_to_pieces_positions(self):
-        
+
         self.chess_board.initialize_empty_board()
         for i in range(0, len(self.pieces_position)):
             chess_piece = self.chess_board.pieces[i]
@@ -44,7 +45,7 @@ class Individuals(BaseSolver):
     def deepcopy_pieces_position(self):
         return copy.deepcopy(self.pieces_position)
 
-    @staticmethod     
+    @staticmethod
     def reset_individual_count():
         Individuals.individual_count = 0
 
@@ -53,4 +54,3 @@ class Individuals(BaseSolver):
 
     def add_piece_to_board(self, chess_piece):
         self.chess_board.add_piece_to_board(chess_piece)
-
