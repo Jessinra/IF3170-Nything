@@ -1,26 +1,34 @@
 class StateEvaluator:
     def evaluate(self, chess_board):
-        score = 0
-        for piece in chess_board.pieces:
-            score += self.evaluate_piece_attack_target(chess_board, piece)
+        score_same_color = 0
+        score_diff_color = 0
 
-        return score
+        for piece in chess_board.pieces:
+            same_score, diff_score = self.evaluate_piece_attack_target(chess_board, piece)
+            score_same_color += same_score
+            score_diff_color += diff_score
+
+        single_score = score_same_color + score_diff_color
+        return score_same_color, score_diff_color, single_score
 
     def evaluate_piece_attack_target(self, chess_board, chess_piece):
         attack_pattern = chess_piece.get_attack_pattern()
 
-        tuple_score = (0, 0)  # (same, diff)
+        score_same_color = 0
+        score_diff_color = 0
 
         for direction in attack_pattern:
             tiles_to_check = attack_pattern[direction]
             for tile in tiles_to_check:
                 piece_on_checked_tile = chess_board.get_piece_on_tile(tile)
                 if piece_on_checked_tile is not None:
-                    tuple_score += self.get_score(piece_on_checked_tile, chess_piece)
+                    same_score, diff_score = self.get_score(piece_on_checked_tile, chess_piece)
+                    score_same_color += same_score
+                    score_diff_color += diff_score
+
                     break
 
-        single_score = tuple_score[0] + tuple_score[1]
-        return tuple_score, single_score
+        return score_same_color, score_diff_color
 
     def get_score(self, targeted_piece, chess_piece):
         if targeted_piece.color == chess_piece.color:

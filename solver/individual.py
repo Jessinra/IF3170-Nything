@@ -15,7 +15,7 @@ class Individuals(BaseSolver):
         self.set_id()
 
     def set_score(self):
-        self.score = self.evaluator.evaluate(self.chess_board)
+        _, _, self.score = self.evaluator.evaluate(self.chess_board)
 
     def generate_pieces_position(self):
         self.pieces_position = []
@@ -27,7 +27,6 @@ class Individuals(BaseSolver):
         empty_tiles = self.chess_board.get_empty_tiles()
         random_index = random.randint(0, len(self.pieces_position) - 1)
 
-        print(len(self.pieces_position), random_index)
         self.pieces_position[random_index] = random.choice(empty_tiles)
 
     def place_chess_piece_according_to_pieces_positions(self):
