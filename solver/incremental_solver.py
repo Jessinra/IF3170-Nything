@@ -4,7 +4,7 @@ class IncrementalSolver(BaseSolver):
     def __init__(self, chess_board):
         super().__init__()
         self.chess_board = chess_board
-        self.current_score = self.evaluator.evaluate(self.chess_board)
+        _, _, self.current_score = self.evaluator.evaluate(self.chess_board)
 
     def get_new_move(self):
         raise RuntimeError("Method not implemented yet!")
@@ -27,7 +27,7 @@ class IncrementalSolver(BaseSolver):
 
         # Try to forecast score
         self.move_chess_piece(moved_piece, new_position)
-        score = self.evaluator.evaluate(self.chess_board)
+        _, _, score = self.evaluator.evaluate(self.chess_board)
 
         # Revert back to original position
         self.move_chess_piece(moved_piece, old_position)

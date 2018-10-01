@@ -230,9 +230,10 @@ class GeneticAlgorithm(BaseSolver):
         self.reassign_individuals_id()
         self.teardown()
 
-        # print()
-        # print(self.population_count)
-        # print("best", max([x.score for x in self.population]))
-        # print("top 4")
-        # for x in self.population:
-        #     print(x.pieces_position)
+        print()
+        print(self.population_count)
+        print("best", max([x.score for x in self.population]))
+        print("top 4")
+        for x in self.population[:4]:
+            print(x.pieces_position)
+        print("unique individual:", len(set(self.population)))
