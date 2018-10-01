@@ -74,10 +74,6 @@ class ChessBoard:
         row, col = position
         return self.board[row][col]
 
-    def update_chess_piece(self, chess_piece, previous_position):
-        self.set_tiles_value(previous_position, None)
-        self.set_tiles_value(chess_piece.position, chess_piece)
-
     def __str__(self):
 
         result = ""

@@ -9,10 +9,17 @@ class IncrementalSolver(BaseSolver):
     def get_new_move(self):
         raise RuntimeError("Method not implemented yet!")
 
-    def move_chess_piece(self, chess_piece, position):
-        from_position = chess_piece.position
-        chess_piece.move(position)
-        self.chess_board.update_chess_piece(chess_piece, from_position)
+    def move_chess_piece(self, chess_piece, new_position):
+        piece_on_new_position = self.chess_board.get_piece_on_tile(new_position)
+
+        if piece_on_new_position is None:
+            self.chess_board.set_tiles_value(chess_piece.position, None)
+        else:
+            self.chess_board.set_tiles_value(chess_piece.position, piece_on_new_position)
+            piece_on_new_position.move(chess_piece.position)
+
+        self.chess_board.set_tiles_value(new_position, chess_piece)
+        chess_piece.move(new_position)
 
     def evaluate_move(self, moved_piece, new_position):
         # Store original position as we need to move the piece for evaluation
