@@ -7,4 +7,4 @@ class StochasticHillClimbing(HillClimbing):
         super().__init__(chess_board)
     
     def get_new_move(self):
-        return random.choice(self.chess_board.pieces), random.choice(self.get_empty_tiles())
+        return random.choice(self.chess_board.pieces), random.choice(self.chess_board.get_all_tiles())

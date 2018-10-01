@@ -55,6 +55,13 @@ class ChessBoard:
                 empty_tiles.append((i, j))
         return empty_tiles
 
+    def get_all_tiles(self):
+        all_tiles = []
+        for i in range(self.max_row):
+            for j in range(self.max_col):
+                all_tiles.append((i, j))
+        return all_tiles
+
     def add_piece_to_board(self, chess_piece):
         self.set_tiles_value(chess_piece.position, chess_piece)
 

@@ -34,7 +34,7 @@ class SimulatedAnnealing(IncrementalSolver):
         return diff
 
     def get_new_move(self):
-        return random.choice(self.chess_board.pieces), random.choice(self.get_empty_tiles())
+        return random.choice(self.chess_board.pieces), random.choice(self.chess_board.get_all_tiles())
 
     def should_bad_move_be_accepted(self, bad_move_score):
         return random.random() < self.get_threshold(self.current_score - bad_move_score, self.step)
