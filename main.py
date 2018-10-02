@@ -26,9 +26,9 @@ def logo():
 
 
 def author():
-    print("13516XXX Felix")
-    print("13516XXX Jessin")
-    print("13516XXX Renjira")
+    print("13516041 Felix Septianus")
+    print("13516112 Jessin Donnyson")
+    print("13516014 Renjira")
     print("13516101 Kelvin Kristian")
     print("13516119 Gabriel Bentara Raphael")
     print("===================================================================================")
@@ -40,11 +40,6 @@ def menu():
     print("2. Stochastic Hill Climbing")
     print("3. Simulated Annealing")
     print("4. Genetic Algorithm")
-
-
-def prompt():
-    cmd = input(">>> ")
-    return cmd
 
 
 def prepare_algo():
@@ -82,11 +77,13 @@ def prepare_full_hill():
     board = ChessBoard.load_board(board_data)
     solver = SolverModelFactory.create_model("full_scan_hill_climbing", board)
 
+
 def prepare_stoc_hill():
     global solver, board_data
     basic_prepare()
     board = ChessBoard.load_board(board_data)
     solver = SolverModelFactory.create_model("stochastic_hill_climbing", board)
+
 
 def prepare_sim_ann():
     global solver, board_data
@@ -94,6 +91,7 @@ def prepare_sim_ann():
     prepare_generator()
     board = ChessBoard.load_board(board_data)
     solver = SolverModelFactory.create_model("simulated_annealing", board, generator)
+
 
 def prepare_generator():
     global generator
@@ -109,6 +107,7 @@ def prepare_generator():
         print("Incremental step (0.0 - 1.0) :")
         step = prompt()
         generator = BoltzmannGenerator(float(temp), float(step))
+
 
 def prepare_ga():
     global solver, board_data
@@ -135,6 +134,10 @@ def execute():
     print(solver.evaluator.evaluate(board))
     print("Jumlah bidak menyerang (sama warna, beda warna)")
     print(solver.evaluator.evaluate_chess_count(board))
+
+def prompt():
+    cmd = input(">>> ")
+    return cmd
 
 
 if __name__ == "__main__":
