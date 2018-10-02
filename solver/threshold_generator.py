@@ -25,6 +25,9 @@ class BoltzmannGenerator(ThresholdGenerator):
         self.ratio = ratio
 
     def calculate_threshold(self, value_difference, step):
+        if (self.ratio ** step) <= 0:
+            return 0
+
         current_temperature = self.initial_temperature / self.ratio ** step
 
         if current_temperature <= 0:
