@@ -131,7 +131,10 @@ def execute():
         board = solver.chess_board
     print()
     print(board)
+    print("Jumlah serangan (sama warna, beda warna, total)")
     print(solver.evaluator.evaluate(board))
+    print("Jumlah bidak menyerang (sama warna, beda warna)")
+    print(solver.evaluator.evaluate_chess_count(board))
 
 
 if __name__ == "__main__":
