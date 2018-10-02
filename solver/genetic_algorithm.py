@@ -3,17 +3,14 @@ from chess_board import ChessBoard
 from solver.individual import Individual
 import random
 import copy
-import math
 import numpy
 
 
 class GeneticAlgorithm(BaseSolver):
-    def __init__(self, population_count, max_population, mutation_probability, population_survival_rate):
+    def __init__(self, population_count, mutation_probability):
         super().__init__()
         self.population_count = population_count
-        self.max_population = max_population
         self.mutation_probability = mutation_probability
-        self.population_survival_rate = population_survival_rate  # keep best n-% every iteration
         self.population = []
         self.new_children = []
         self.crossovered_pieces_position = []
@@ -171,10 +168,6 @@ class GeneticAlgorithm(BaseSolver):
         self.population = self.population[:self.population_count]
 
     def calculate_population_count(self):
-        if self.population_count > self.max_population:
-            self.population_count = self.max_population
-
-        #self.population_count = math.ceil(self.population_count * self.population_survival_rate)
         self.population_count -= len(self.new_children)
 
         if self.population_count % 2 == 1:

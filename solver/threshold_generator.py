@@ -14,7 +14,7 @@ class ConstantGenerator(ThresholdGenerator):
         super().__init__()
         self.threshold = threshold
 
-    def calculate_threshold(self):
+    def calculate_threshold(self, score_difference, step):
         return self.threshold
 
 
