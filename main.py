@@ -99,12 +99,12 @@ def prepare_generator():
     print("1. Constant Generator")
     print("2. Boltzmann Generator")
     choice = prompt()
-    print("Initial temperature :")
+    print("Initial temperature (suggested 15) :")
     temp = prompt()
     if choice == "1":
         generator = ConstantGenerator(float(temp))
     else:
-        print("Incremental step (0.0 - 1.0) :")
+        print("Input Ratio (suggested 1.0006) :")
         step = prompt()
         generator = BoltzmannGenerator(float(temp), float(step))
 
